@@ -3,8 +3,17 @@ class DeedsController < ApplicationController
   
     # List all unfulfilled deeds
     def index
-      deeds = Deed.includes(:volunteers).where(status: 'unfulfilled')
-      render json: deeds.to_json(include: { volunteers: { only: [:id, :first_name, :last_name] } })
+      if params[:user_id] # Check if fetching deeds for a specific user
+        user = User.find(params[:user_id])
+        deeds = user.requested_deeds.includes(:volunteers, :completed_by)
+      else
+        deeds = Deed.includes(:volunteers).where(status: 'unfulfilled') # Default: only unfulfilled deeds
+      end
+    
+      render json: deeds.to_json(include: { 
+        volunteers: { only: [:id, :first_name, :last_name] },
+        completed_by: { only: [:id, :first_name, :last_name] }
+      })
     end
   
     # Create a new deed

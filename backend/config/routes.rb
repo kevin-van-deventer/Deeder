@@ -6,7 +6,10 @@ Rails.application.routes.draw do
   resources :deeds, only: [:index, :create]
   post '/deeds/:id/volunteer', to: 'deeds#volunteer'
   post '/deeds/:id/complete', to: 'deeds#complete'
+  
+  get '/users/:user_id/deeds', to: 'deeds#index' # Fetch all deeds by user
 
+  
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
 
   # Reveal health status on /up that returns 200 if the app boots with no exceptions, otherwise 500.
