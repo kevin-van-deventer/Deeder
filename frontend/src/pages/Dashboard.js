@@ -16,6 +16,8 @@ const Dashboard = () => {
   const [fulfilledDeeds, setFulfilledDeeds] = useState(0);
   const [unfulfilledDeeds, setUnfulfilledDeeds] = useState(0);
   const [deedsFulfilledForOthers, setDeedsFulfilledForOthers] = useState(0);
+  const [volunteeredDeeds, setVolunteeredDeeds] = useState([]);
+  const [completedVolunteeredDeeds, setCompletedVolunteeredDeeds] = useState([]);
   const [deedData, setDeedData] = useState({
     description: "",
     deed_type: "one-time",
@@ -36,6 +38,9 @@ const Dashboard = () => {
 
   // fetch user details from api
   const fetchUserDetails = async (userId) => {
+
+    if (!userId) return;
+
     try {
       const response = await axios.get(`http://localhost:3000/users/${userId}`, {
         headers: { Authorization: `Bearer ${token}` },
@@ -51,10 +56,23 @@ const Dashboard = () => {
         last_name: response.data.last_name,
         email: response.data.email,
       });
-    } catch (error) {
-      console.error("Error fetching user details:", error);
-    }
-  };
+
+      // Fetch volunteered deeds
+      const volunteeredResponse = await axios.get(`http://localhost:3000/users/${userId}/volunteered_deeds`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+
+      const allVolunteeredDeeds = volunteeredResponse.data;
+       // Filter only deeds where the user was the one who completed them
+      const completedVolunteeredDeeds = allVolunteeredDeeds.filter(deed => deed.completed_by && deed.completed_by.id === userId);
+
+      setVolunteeredDeeds(allVolunteeredDeeds);
+      setCompletedVolunteeredDeeds(completedVolunteeredDeeds);
+
+      } catch (error) {
+        console.error("Error fetching user details:", error);
+      }
+    };
 
   // Handle input changes
   const handleChange = (e) => {
@@ -183,6 +201,43 @@ const Dashboard = () => {
       alert("Failed to delete deed.");
     }
   };
+  const handleCompleteDeed = async (deedId) => {
+    if (!window.confirm("Are you sure you want to mark this deed as completed?")) return;
+  
+    try {
+      const response = await axios.post(
+        `http://localhost:3000/deeds/${deedId}/complete`,
+        {},
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
+  
+      alert(response.data.message);
+      fetchDeeds(user.id); // Refresh the deeds list
+    } catch (error) {
+      console.error("Error completing deed:", error.response?.data || error.message);
+      alert("Failed to mark deed as completed.");
+    }
+  };
+  
+
+  const handleConfirmCompletion = async (deedId) => {
+    try {
+      const response = await axios.post(
+        `http://localhost:3000/deeds/${deedId}/complete`,
+        {},
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+  
+      alert(response.data.message);
+      fetchDeeds(user.id); // Refresh deeds list
+    } catch (error) {
+      console.error("Error confirming completion:", error);
+      alert(error.response?.data?.error || "Failed to confirm completion.");
+    }
+  };
+  
 
   const handleLogout = () => {
     localStorage.removeItem("token");
@@ -236,7 +291,7 @@ const Dashboard = () => {
           <p style={{ textAlign: "center", backgroundColor: "rgba(232, 27, 27, 0.75)", borderRadius: "10px", marginTop: "5px", marginBottom: "10px", backdropFilter: "blur(10px)", padding:"10px" }}>Unfulfilled: <strong>{unfulfilledDeeds}</strong></p>
           <p style={{ textAlign: "center", backgroundColor: "rgba(50, 213, 66, 0.75)", borderRadius: "10px", marginTop: "5px", marginBottom: "10px", backdropFilter: "blur(10px)", padding:"10px" }}>Fulfilled: <strong>{fulfilledDeeds}</strong></p>
           <p style={{ textAlign: "center", backgroundColor: "rgba(7, 12, 7, 0.75)", borderRadius: "10px", marginTop: "5px", marginBottom: "10px", backdropFilter: "blur(10px)", padding: "10px" }}>Deeds Fulfilled: <strong>{deedsFulfilledForOthers}</strong></p>
-          <p style={{ textAlign: "center", backgroundColor: "rgba(7, 12, 7, 0.75)", borderRadius: "10px", marginTop: "5px", marginBottom: "10px", backdropFilter: "blur(10px)", padding:"10px" }}>Volunteered: <strong>?</strong></p>
+          <p style={{ textAlign: "center", backgroundColor: "rgba(7, 12, 7, 0.75)", borderRadius: "10px", marginTop: "5px", marginBottom: "10px", backdropFilter: "blur(10px)", padding:"10px" }}>Volunteered: <strong>{completedVolunteeredDeeds.length}</strong></p>
         </div>
       </div>
   
@@ -247,8 +302,32 @@ const Dashboard = () => {
           <div className="deed-card" key={deed.id}>
             <p>{deed.description} - {deed.deed_type}</p>
             <p>Status: <strong>{deed.status}</strong></p>
+
+            {/* Show Volunteers */}
+            <p><strong>Volunteers:</strong></p>
+            {deed.volunteers.length > 0 ? (
+              <ul>
+                {deed.volunteers.map((volunteer) => (
+                  <li key={volunteer.id}>
+                    {volunteer.first_name} {volunteer.last_name}
+                  </li>
+                ))}
+              </ul>
+            ) : (
+              <p>No volunteers yet.</p>
+            )}
+
+            {/* Mark as Completed Button */}
+            {deed.status === "unfulfilled" && (
+              <button className="complete-button" onClick={() => handleConfirmCompletion(deed.id)}>
+                Mark as Completed
+              </button>
+            )}
+
+            {/* If deed is fulfilled, show confirmation */}
+            {deed.status === "fulfilled" && <p style={{ color: "green" }}>✔ Deed Completed</p>}
+
             <button className="delete-button" onClick={() => handleDeleteDeed(deed.id)}>Delete</button>
-            <button className="complete-button" onClick={() => handleDeleteDeed(deed.id)}>Complete</button>
           </div>
         ))}
   
@@ -277,7 +356,34 @@ const Dashboard = () => {
             )}
           {/* </div> */}
         </div>
-  
+
+        {/* volunteered deeds */}
+        <div className="deeds-section">
+          <h2 style={{ textAlign: "center", backgroundColor: "rgba(50, 205, 213, 0.75)", borderRadius: "10px", marginTop: "30px", marginBottom: "10px", backdropFilter: "blur(10px)", padding: "10px" }} >Volunteered Deeds</h2>
+          <ul>
+            {volunteeredDeeds.length > 0 ? (
+              volunteeredDeeds.map((deed) => (
+                <li key={deed.id} className="deed-card">
+                  {/* <p>Deed requesters name</p> */}
+                  <p>{deed.description}</p>
+                  <p>{deed.deed_type}</p>
+                  <p>Address: {deed.address}</p>
+                  <p>Status: <strong>{deed.status}</strong></p>
+                  {deed.status === "unfulfilled" && (
+                    <button className="complete-button" onClick={() => handleCompleteDeed(deed.id)}>
+                      Mark as Completed
+                    </button>
+                  )}
+                  {/* <button className="complete-button" onClick={() => handleCompleteDeed(deed.id)}>Mark as Completed</button> */}
+                </li>
+              ))
+            ) : (
+              <p>No deeds volunteered for yet.</p>
+            )}
+          </ul>
+        </div>    
+        
+
       {/* Logout Button */}
       <button className="logout-button" onClick={handleLogout}>Logout</button>
     </div>

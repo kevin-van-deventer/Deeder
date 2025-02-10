@@ -29,7 +29,7 @@ class DeedsController < ApplicationController
                       .merge(
                         volunteer_count: deed.volunteers.count,
                         volunteers: deed.volunteers.as_json(only: [:id, :first_name, :last_name]),
-                        completed_by: deed.completed_by.as_json(only: [:id, :first_name, :last_name])
+                        completed_by: deed.completed_by&.as_json(only: [:id, :first_name, :last_name])
                       )
     rescue ActiveRecord::RecordNotFound
       render json: { error: "Deed not found" }, status: :not_found
@@ -82,23 +82,50 @@ class DeedsController < ApplicationController
         render json: { message: 'You have volunteered for this deed', deed: deed }, status: :ok
     end
   
-    # Mark a deed as completed
+    # Get deeds a user volunteered for
+    # GET /users/:user_id/volunteered_deeds
+    def volunteered_deeds
+      user = User.find(params[:user_id])
+      deeds = user.volunteered_deeds.includes(:requester, :completed_by)
+
+      render json: deeds.map { |deed|
+        deed.as_json(only: [:id, :description, :deed_type, :latitude, :longitude, :status, :address, :created_at, :completed_by_id]).merge(
+          requester: deed.requester.as_json(only: [:id, :first_name, :last_name]),
+          completed_by: deed.completed_by.as_json(only: [:id, :first_name, :last_name])
+        )
+      }
+    end
+
+
+    # Mark a deed as completed by both users
     def complete
       deed = Deed.find(params[:id])
-  
-      if deed.status == 'fulfilled'
-        render json: { error: 'This deed is already completed' }, status: :unprocessable_entity
-      else
-        deed.update(status: 'fulfilled', completed_by_id: @current_user.id)
-        render json: { message: 'Deed marked as completed', deed: deed }, status: :ok
+      user = @current_user
+
+      return render json: { error: 'This deed is already completed' }, status: :unprocessable_entity if deed.status == 'fulfilled'
+
+      # Ensure only the requester or a volunteer can confirm
+      unless deed.requester_id == user.id || deed.volunteers.include?(user)
+        return render json: { error: "You are not authorized to confirm this deed." }, status: :forbidden
       end
+
+      # Create or update confirmation
+      completion = DeedCompletion.find_or_initialize_by(deed: deed, user: user)
+      completion.confirmed = true
+      completion.save!
+
+      # If both requester and volunteer confirmed, mark deed as fulfilled
+      if deed.fully_confirmed?
+        volunteer = deed.deed_completions.where.not(user_id: deed.requester_id).first&.user
+        deed.update!(status: 'fulfilled', completed_by_id: volunteer.id)
+        return render json: { message: "Deed fully confirmed and marked as completed!", deed: deed }, status: :ok
+      end
+
+      render json: { message: "Your confirmation has been recorded. Waiting for the other party to confirm.", deed: deed }, status: :ok
     end
-  
-    # private
-  
+
     def deed_params
-        params.require(:deed).permit(:description, :deed_type, :status, :latitude, :longitude, :address, :created_at)
-      end
-      
+      params.require(:deed).permit(:description, :deed_type, :status, :latitude, :longitude, :address, :created_at)
+    end
   end
   

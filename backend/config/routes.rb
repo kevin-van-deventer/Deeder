@@ -1,17 +1,29 @@
 Rails.application.routes.draw do
 
+  # User Routes
   resources :users, only: [:create, :show, :update] do
-    resources :deeds, only: [:index, :create, :show, :destroy]
+    resources :deeds, only: [:index, :create, :show, :destroy] # User-specific deeds
+    get 'volunteered_deeds', to: 'deeds#volunteered_deeds' # Fetch deeds user volunteered for
   end
 
-  post '/login', to: 'users#login'
+  get '/users/:id', to: 'users#show'
+  
+  # resources :deeds do
+  #   member do
+  #     post 'complete'
+  #   end
+  # end
 
   # Routes for deeds that aren't tied to a specific user
-  resources :deeds, only: [:index, :create, :show, :destroy]
-  post '/deeds/:id/volunteer', to: 'deeds#volunteer'
-  post '/deeds/:id/complete', to: 'deeds#complete'
-  post "/deeds/:id/fulfill", to: "deeds#fulfill"
-  
+  # General Deed Routes
+  resources :deeds, only: [:index, :create, :show, :destroy] do
+    member do
+      post 'complete' # Mark deed as complete (by both requester and volunteer)
+      post 'volunteer' # Volunteer for a deed
+    end
+  end
 
-  # get '/users/:user_id/deeds', to: 'deeds#index' # Fetch all deeds by user
+  # Authentication
+  post '/login', to: 'users#login'
+
 end
