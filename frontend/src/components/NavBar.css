@@ -1,0 +1,62 @@
+/* Navbar Styling */
+.navbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 60px;
+  padding-top: 10px;
+  background: rgba(50, 205, 213, 0.25); /* Similar semi-transparent effect */
+  backdrop-filter: blur(10px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000; /* Ensure it stays on top */
+}
+
+.nav-list {
+  list-style: none;
+  display: flex;
+  gap: 20px;
+  padding: 0;
+}
+
+.nav-list li {
+  display: flex;
+  align-items: center;
+  background: none;
+}
+
+.nav-link {
+  text-decoration: none;
+  color: white;
+  font-size: 16px;
+  font-weight: 500;
+  padding: 10px 20px;
+  transition: 0.25s;
+  border-radius: 99px;
+}
+
+.nav-link:hover {
+  background: rgba(255, 255, 255, 0.15);
+}
+
+.nav-button {
+  background: #32cdd5;
+  color: white;
+  font-size: 16px;
+  font-weight: bold;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 99px;
+  cursor: pointer;
+  transition: 0.25s;
+}
+
+.nav-button:hover {
+  background: rgba(50, 205, 213, 0.8);
+}
+
+.nav-button:focus {
+  outline: rgba(50, 205, 213, 0.54) 3px solid;
+}

@@ -1,0 +1,51 @@
+import { useEffect, useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import "./NavBar.css"; // Import CSS for styling
+
+const Navbar = () => {
+  const [isLoggedIn, setIsLoggedIn] = useState(!!localStorage.getItem("token"));
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const handleStorageChange = () => {
+      setIsLoggedIn(!!localStorage.getItem("token"));
+    };
+
+    window.addEventListener("storage", handleStorageChange);
+    return () => {
+      window.removeEventListener("storage", handleStorageChange);
+    };
+  }, []);
+
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    setIsLoggedIn(false);
+    navigate("/login");
+    window.location.reload(); // Ensures AppRouter updates
+  };
+
+  return (
+    <nav className="navbar">
+      <ul className="nav-list">
+        {/* <li>
+          <Link to="/" className="nav-link">Home</Link>
+        </li> */}
+        <li>
+          <Link to="/dashboard" className="nav-link">Dashboard</Link>
+        </li>
+        <li>
+          <Link to="/maps" className="nav-link">Map</Link>
+        </li>
+        <li>
+          {isLoggedIn ? (
+            <button onClick={handleLogout} className="nav-button">Logout</button>
+          ) : (
+            <Link to="/login" className="nav-link">Login</Link>
+          )}
+        </li>
+      </ul>
+    </nav>
+  );
+};
+
+export default Navbar;

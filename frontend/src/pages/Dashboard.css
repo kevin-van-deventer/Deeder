@@ -1,0 +1,250 @@
+/* Global Reset */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* set body to use strict */
+body {
+  font-family: Arial, sans-serif;
+  background-color: rgba(50, 205, 213, 0.25);
+  background: none;
+  color: white;
+  min-height: 100vh;
+  padding-top: 70px; /* Ensures content starts below navbar */
+  overflow-x: hidden;
+}
+
+/* Dashboard Container */
+.dashboard-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-height: 100vh; /* Allows content to expand */
+  width: 100%;
+}
+
+/* Main Content */
+.dashboard-content {
+  max-width: 900px;
+  width: 100%;
+  padding: 20px;
+}
+
+.top-section {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  gap: 20px;
+}
+
+/* Profile & Sections */
+.profile-card,
+.stats-section {
+  width: 50%;
+  background: rgba(50, 205, 213, 0.25);
+  backdrop-filter: blur(10px);
+  padding: 20px;
+  border-radius: 12px;
+  text-align: center;
+}
+
+/* Deed Cards */
+.deed-card {
+  background: rgba(50, 205, 213, 0.25);
+  backdrop-filter: blur(10px);
+  padding: 15px;
+  border-radius: 10px;
+  margin-bottom: 10px;
+  text-align: center;
+}
+
+/* Profile Picture */
+.profile-image {
+  width: 100%;
+  border-radius: 10px;
+  margin-top: 10px;
+}
+
+/* Buttons */
+.edit-button,
+.save-button,
+.cancel-button,
+.logout-button,
+.deed-button {
+  background: #32cdd5;
+  color: white;
+  border: none;
+  padding: 10px;
+  margin-top: 10px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: 0.25s;
+  font-size: 16px;
+  font-weight: bold;
+  width: 100%;
+}
+
+.edit-button:hover,
+.save-button:hover,
+.logout-button:hover,
+.deed-button:hover {
+  background: rgba(50, 205, 213, 0.8);
+}
+
+/* Delete Button */
+.delete-button {
+  background: rgba(255, 0, 0, 0.7);
+  color: white;
+  border: none;
+  padding: 10px;
+  margin-top: 10px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: 0.25s;
+}
+
+.delete-button:hover {
+  background: rgba(255, 0, 0, 1);
+}
+
+.complete-button {
+  background: rgba(0, 0, 0, 0.7);
+  color: white;
+  border: none;
+  padding: 10px;
+  margin-top: 10px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: 0.25s;
+}
+
+/* Cancel Button */
+.cancel-button {
+  background: rgba(255, 0, 0, 0.7);
+}
+
+.cancel-button:hover {
+  background: rgba(255, 0, 0, 1);
+}
+
+/* Deed Card */
+/* .deed-card {
+  background: rgba(255, 255, 255, 0.1);
+  padding: 15px;
+  border-radius: 10px;
+  margin-bottom: 10px;
+} */
+
+/* Scrollable Content */
+/* .dashboard-content {
+  overflow-y: auto;
+} */
+
+/* =================== */
+/* Popup Form Styling */
+/* =================== */
+
+/* Modal Overlay - Covers Full Screen */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.6);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999; /* Ensures it stays on top of all content */
+  animation: fadeIn 0.3s ease-in-out;
+  overflow: hidden;
+}
+
+/* Modal Content - Popup Box */
+.modal-content {
+  background: rgba(50, 205, 213, 0.25);
+  backdrop-filter: blur(10px);
+  padding: 25px;
+  border-radius: 12px;
+  width: 100%;
+  max-width: 500px;
+  text-align: center;
+  position: relative;
+  z-index: 10000;
+  animation: scaleUp 0.3s ease-in-out;
+  overflow-y: auto;
+}
+
+/* Hide Scrollbar for Modal in All Browsers */
+.modal-content::-webkit-scrollbar {
+  display: none; /* Hides scrollbar in WebKit (Chrome, Safari) */
+}
+
+.modal-content {
+  -ms-overflow-style: none; /* Hides scrollbar in IE/Edge */
+  scrollbar-width: none; /* Hides scrollbar in Firefox */
+}
+
+/* Input & Select Fields */
+.deed-input {
+  width: 100%;
+  padding: 10px;
+  margin: 10px 0;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.1);
+  color: white;
+  font-size: 16px;
+  outline: none;
+  transition: 0.25s;
+}
+
+.deed-input:focus {
+  border-color: rgba(255, 255, 255, 0.6);
+}
+
+/* Submit Button (Disable State) */
+.deed-button:disabled {
+  background: rgba(50, 205, 213, 0.4);
+  cursor: not-allowed;
+}
+
+/* =================== */
+/* Animations */
+/* =================== */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes scaleUp {
+  from {
+    transform: scale(0.9);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+@media (max-width: 768px) {
+  .top-section {
+    flex-direction: column;
+  }
+
+  .profile-card,
+  .stats-section {
+    width: 100%;
+  }
+
+  .modal-content {
+    max-width: 90%;
+  }
+}

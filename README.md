@@ -34,7 +34,7 @@
 23) edit app/controllers/users_controller.rb
 24) Edit config/routes.rb
 25) Create a BaseController (app/controllers/application_controller.rb)
-26) create deeds model - rails generate model Deed description:string deed_type:string status:string requester_id:integer responder_id:integer  completed_by_id:integer
+26) create deeds model - rails generate model Deed description:string deed_type:string status:string requester_id:integer responder_id:integer  completed_by_id:integer lat:decimal lon:decimal
 rails db:migrate
 26.2) create a join table since multiple users can volunteer for one deed
 26.3) rails generate model DeedVolunteer user_id:integer deed_id:integer - rails db:migrate

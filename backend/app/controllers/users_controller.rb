@@ -1,5 +1,5 @@
 class UsersController < ApplicationController
-    skip_before_action :authenticate_user, only: [:create, :login] # <-- This allows public access
+    skip_before_action :authenticate_user, only: [:create, :show, :update, :login] # <-- This allows public access
   
     require 'jwt'
   
@@ -35,7 +35,34 @@ class UsersController < ApplicationController
         end
       end
       
-  
+      # Fetch user details and display deeds counters
+      def show
+        user = User.find(params[:id])
+
+        # deeds counter
+        fulfilled_deeds = user.requested_deeds.where(status: "fulfilled").count
+        unfulfilled_deeds = user.requested_deeds.where(status: "unfulfilled").count
+        deeds_fulfilled_for_others = user.completed_deeds.count
+
+        render json: user.as_json(only: [:id, :first_name, :last_name, :email]).merge({
+          id_document_url: user.id_document.attached? ? url_for(user.id_document) : nil,
+          fulfilled_deeds: fulfilled_deeds,
+          unfulfilled_deeds: unfulfilled_deeds,
+          deeds_fulfilled_for_others: deeds_fulfilled_for_others
+        })
+      end
+
+      # Update a users details and file upload
+      def update
+        user = User.find(params[:id])
+      
+        if user.update(user_params)
+          render json: { message: "User updated successfully", user: user.as_json(only: [:id, :first_name, :last_name, :email]) }
+        else
+          render json: { errors: user.errors.full_messages }, status: :unprocessable_entity
+        end
+      end
+
     private
   
     def user_params
