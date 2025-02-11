@@ -121,7 +121,7 @@ p {
 .cancel-button,
 .logout-button,
 .deed-button {
-  background: #222424;
+  background: #367979;
   color: white;
   border: none;
   padding: 10px;
@@ -154,6 +154,47 @@ p {
   outline: none;
   transition: 0.25s;
   text-align: center;
+}
+
+.upload-label {
+  width: 100%;
+  display: inline-block;
+  background: linear-gradient(135deg, #ffffff, #ffffff);
+  color: rgb(0, 0, 0);
+  text-shadow: -1px -1px 1px rgba(0, 255, 255, 0.6),
+    1px -1px 1px rgba(0, 255, 255, 0.6), -1px 1px 1px rgba(0, 255, 255, 0.6),
+    1px 1px 1px rgba(0, 255, 255, 0.6);
+  padding: 12px 20px;
+  margin-top: 3px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: bold;
+  transition: all 0.3s ease;
+  text-align: center;
+  border: 2px solid transparent;
+}
+
+/* Hover effect */
+.upload-label:hover {
+  background: linear-gradient(135deg, #3a8e98, #066d7c);
+  color: white;
+}
+
+/* Focus effect */
+.upload-label:focus {
+  outline: none;
+  border: 2px solid #32cdd5;
+}
+
+/* Selected file name */
+.file-name {
+  display: block;
+  margin-top: 10px;
+  font-size: 14px;
+  color: #ddd;
+  text-align: center;
+  font-weight: bold;
 }
 
 /* Delete Button */

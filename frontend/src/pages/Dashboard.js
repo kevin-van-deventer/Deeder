@@ -274,7 +274,7 @@ const Dashboard = () => {
                 <input className="input-field" type="text" name="first_name" value={formData.first_name} onChange={handleChange} placeholder="First Name" />
                 <input className="input-field" type="text" name="last_name" value={formData.last_name} onChange={handleChange} placeholder="Last Name" />
                 <input className="input-field" type="email" name="email" value={formData.email} onChange={handleChange} placeholder="Email" />
-                <input className="input-field" type="file" accept="image/png, image/jpeg, application/pdf" onChange={handleFileChange} />
+                <input className="upload-label" type="file" accept="image/png, image/jpeg, application/pdf" onChange={handleFileChange} />
                 <button className="save-button" onClick={handleUpdate}>Save</button>
                 <button className="cancel-button" onClick={() => setIsEditing(false)}>Cancel</button>
               </>
@@ -368,11 +368,13 @@ const Dashboard = () => {
                   <p>{deed.description} - {deed.deed_type}</p>
                   <p>Address: {deed.address}</p>
                   <p>Status: <strong>{deed.status}</strong></p>
+                  {deed.status === "fulfilled" && <p style={{ color: "#00eeff" }}>✔ Deed Completed</p>}
                   {deed.status === "unfulfilled" && (
                     <button className="complete-button" onClick={() => handleCompleteDeed(deed.id)}>
                       Mark as Completed
                     </button>
                   )}
+
                   {/* <button className="complete-button" onClick={() => handleCompleteDeed(deed.id)}>Mark as Completed</button> */}
                 </li>
               ))
