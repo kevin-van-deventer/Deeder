@@ -96,7 +96,7 @@ const MapsPage = () => {
 
         {/* Flex Container for Map and Latest Deeds */}
         <div className="map-deeds-container">
-          {/* Left Side: Map (70%) */}
+          {/* Left Side: Map */}
           <div className="map-container">
             <LoadScriptNext googleMapsApiKey={apiKey}>
               <GoogleMap mapContainerStyle={mapContainerStyle} zoom={10} center={userLocation}>
@@ -121,16 +121,20 @@ const MapsPage = () => {
             </LoadScriptNext>
           </div>
 
-          {/* Right Side: Latest Deeds (30%) */}
+          {/* Right Side: Latest Deeds */}
           <div className="deeds-list">
             <h2>Latest Deeds</h2>
             {deeds.length === 0 ? <p>No deeds available.</p> : (
               deeds.map((deed) => (
                 <div key={deed.id} className="deed-card">
-                  <h3>{deed.description}</h3>
+                  <p><strong>{deed.description}</strong></p>
+                  <p>{deed.address}</p>
                   <p><strong>Type:</strong> {deed.deed_type}</p>
-                  <p><strong>Status:</strong> {deed.status}</p>
-                  <p><strong>Created On:</strong> {new Date(deed.created_at).toLocaleString()}</p>
+                  {/* <p><strong>Status:</strong> {deed.status}</p> */}
+                  {/* <p><strong>Created On:</strong> {new Date(deed.created_at).toLocaleString()}</p> */}
+                  {/* use the formatted date instead */}
+                  <p><strong>Posted:</strong> {formatDate(deed.created_at)}</p>
+                  <button id="deedButton" onClick={() => handleVolunteer(deed.id, deed.requester_id)}>Accept</button>
                 </div>
               ))
             )}

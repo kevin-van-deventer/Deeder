@@ -28,12 +28,12 @@
 /* Latest Deeds Section - Positioned Right (30%) */
 .maps-page .deeds-list {
   width: 30%;
-  height: 100%;
-  background: rgba(0, 0, 0, 0.715);
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.212);
   backdrop-filter: blur(10px);
   padding: 20px;
   overflow-y: auto;
-  border-left: 2px solid rgba(255, 255, 255, 0.3);
+  border-left: 2px solid rgba(255, 255, 255, 0.137);
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -42,7 +42,8 @@
 /* Latest Deeds Title */
 .maps-page .deeds-list h2 {
   font-size: 20px;
-  margin-bottom: 15px;
+  margin-bottom: 10px;
+  margin-top: 50px;
   text-align: center;
 }
 
@@ -116,6 +117,22 @@
   margin-top: 10px;
 }
 
+#deedButton {
+  background: #32cdd5;
+  color: white;
+  border: none;
+  padding: 8px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: 0.3s;
+  font-size: 14px;
+  font-weight: bold;
+  display: block;
+  width: 100%;
+  text-align: center;
+  margin-top: 10px;
+}
+
 /* Responsive Design */
 @media (max-width: 768px) {
   .map-deeds-container {
@@ -132,5 +149,11 @@
     height: auto;
     border-left: none;
     border-top: 2px solid rgba(255, 255, 255, 0.3);
+  }
+  .maps-page .deeds-list h2 {
+    font-size: 20px;
+    margin-bottom: 10px;
+    margin-top: 0px;
+    text-align: center;
   }
 }
