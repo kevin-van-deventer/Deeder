@@ -16,6 +16,30 @@ body {
   overflow-x: hidden;
 }
 
+h2 {
+  text-shadow: -1px -1px 1px rgba(0, 255, 255, 0.6),
+    1px -1px 1px rgba(0, 255, 255, 0.6), -1px 1px 1px rgba(0, 255, 255, 0.6),
+    1px 1px 1px rgba(0, 255, 255, 0.6);
+  color: black;
+  margin-top: 5px;
+  margin-bottom: 10px;
+  padding: 10px;
+}
+
+p {
+  /* text-shadow: -1px -1px 1px rgba(0, 255, 255, 0.6),
+    1px -1px 1px rgba(0, 255, 255, 0.6), -1px 1px 1px rgba(0, 255, 255, 0.6),
+    1px 1px 1px rgba(0, 255, 255, 0.6); */
+  color: rgb(255, 255, 255);
+  text-align: center;
+  margin-top: 5px;
+  margin-bottom: 10px;
+  padding: 10px;
+  border-radius: 10px;
+  border: 1px solid #06c1ce;
+  box-shadow: 10px 8px 10px rgba(0, 0, 0, 0.34), 0px 4px 15px rgba(0, 0, 0, 0.3);
+}
+
 /* Dashboard Container */
 .dashboard-container {
   display: flex;
@@ -43,28 +67,52 @@ body {
 .profile-card,
 .stats-section {
   width: 50%;
-  background: rgba(50, 205, 213, 0.25);
+  background: #222424;
+  box-shadow: 0px 8px 10px rgba(0, 0, 0, 0.84), 0px 4px 15px rgba(0, 0, 0, 0.3);
   backdrop-filter: blur(10px);
   padding: 20px;
-  border-radius: 12px;
+  border-radius: 10px;
   text-align: center;
+  border: 1px solid #06c1ce;
+}
+
+.statCount {
+  font-size: 20px;
+  font-weight: bold;
+  color: #000000;
+  text-shadow: -1px -1px 1px rgba(0, 255, 255, 0.6),
+    1px -1px 1px rgba(0, 255, 255, 0.6), -1px 1px 1px rgba(0, 255, 255, 0.6),
+    1px 1px 1px rgba(0, 255, 255, 0.6);
 }
 
 /* Deed Cards */
 .deed-card {
-  background: rgba(50, 205, 213, 0.25);
+  background: rgb(34 36 36);
   backdrop-filter: blur(10px);
   padding: 15px;
   border-radius: 10px;
   margin-bottom: 10px;
   text-align: center;
+  border: 1px solid #06c1ce;
+  box-shadow: 0px 8px 10px rgba(0, 0, 0, 0.84), 0px 4px 15px rgba(0, 0, 0, 0.3);
+  margin-bottom: 20px;
 }
 
+.deedTitle {
+  font-size: 18px;
+  /* font-weight: bold; */
+  color: #ffffff;
+  text-shadow: -1px -1px 1px rgba(3, 3, 3, 0.6), 1px -1px 1px rgba(0, 0, 0, 0.6),
+    -1px 1px 1px rgba(0, 0, 0, 0.6), 1px 1px 1px rgba(0, 0, 0, 0.6);
+  background-color: #06c1ce79;
+}
 /* Profile Picture */
 .profile-image {
   width: 100%;
   border-radius: 10px;
   margin-top: 10px;
+  border: 1px solid #06c1ce;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.84), 0px 4px 15px rgba(0, 0, 0, 0.3);
 }
 
 /* Buttons */
@@ -73,7 +121,7 @@ body {
 .cancel-button,
 .logout-button,
 .deed-button {
-  background: #32cdd5;
+  background: #222424;
   color: white;
   border: none;
   padding: 10px;
@@ -88,9 +136,24 @@ body {
 
 .edit-button:hover,
 .save-button:hover,
-.logout-button:hover,
 .deed-button:hover {
-  background: rgba(50, 205, 213, 0.8);
+  background: rgba(0, 255, 255, 0.6);
+}
+.logout-button:hover {
+  background-color: red;
+}
+.input-field {
+  width: 100%;
+  padding: 10px;
+  margin: 3px 0;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.1);
+  color: white;
+  font-size: 16px;
+  outline: none;
+  transition: 0.25s;
+  text-align: center;
 }
 
 /* Delete Button */
@@ -128,19 +191,6 @@ body {
 .cancel-button:hover {
   background: rgba(255, 0, 0, 1);
 }
-
-/* Deed Card */
-/* .deed-card {
-  background: rgba(255, 255, 255, 0.1);
-  padding: 15px;
-  border-radius: 10px;
-  margin-bottom: 10px;
-} */
-
-/* Scrollable Content */
-/* .dashboard-content {
-  overflow-y: auto;
-} */
 
 /* =================== */
 /* Popup Form Styling */

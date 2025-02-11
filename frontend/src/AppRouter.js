@@ -12,13 +12,16 @@ import Navbar from "./components/NavBar";
 
 const AppRouter = () => {
   const [user, setUser] = useState(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const token = localStorage.getItem("token");
     setUser(token ? true : null);
+    setLoading(false);
   }, []);  // ✅ Runs only once on mount
   
   const ProtectedRoute = ({ user, children }) => {
+    if (loading) return null;
     return user ? children : <Navigate to="/login" />;
   };
 
@@ -29,6 +32,7 @@ const AppRouter = () => {
         {user ? (
           <>
             <Route path="/dashboard" element={<Dashboard />} />
+            <Route path="/maps" element={<MapsPage />} />
             <Route path="*" element={<Navigate to="/dashboard" />} />
             
           </>

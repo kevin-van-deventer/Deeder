@@ -27,9 +27,9 @@ const Navbar = () => {
   return (
     <nav className="navbar">
       <ul className="nav-list">
-        {/* <li>
-          <Link to="/" className="nav-link">Home</Link>
-        </li> */}
+        <h2 className="webTitle">
+          Deeder
+        </h2>
         <li>
           <Link to="/dashboard" className="nav-link">Dashboard</Link>
         </li>

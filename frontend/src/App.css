@@ -1,5 +1,6 @@
 body:not(.maps-page) {
-  background: url("../public/background2.jpg");
+  /* background: url("../public/background2.jpg"); */
+  background-color: rgb(44 43 44);
   background-size: cover;
   background-repeat: no-repeat;
   width: 100%;

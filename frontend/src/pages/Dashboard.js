@@ -257,7 +257,7 @@ const Dashboard = () => {
       <div className="top-section">
         {user && (
           <div className="profile-card">
-            <h2 style={{ textAlign: "center", backgroundColor: "rgba(50, 205, 213, 0.75)", borderRadius: "10px", marginTop: "5px", marginBottom: "10px", backdropFilter: "blur(10px)", padding:"10px" }}>{user.first_name} {user.last_name}</h2>
+            <h2 style={{ textAlign: "center", borderRadius: "10px", marginTop: "5px", marginBottom: "10px", backdropFilter: "blur(10px)", padding:"10px" }}>{user.first_name} {user.last_name}</h2>
             {user.id_document_url && (
               <div>
                 {/* <p>ID Document:</p> */}
@@ -271,10 +271,10 @@ const Dashboard = () => {
 
             {isEditing ? (
               <>
-                <input type="text" name="first_name" value={formData.first_name} onChange={handleChange} placeholder="First Name" />
-                <input type="text" name="last_name" value={formData.last_name} onChange={handleChange} placeholder="Last Name" />
-                <input type="email" name="email" value={formData.email} onChange={handleChange} placeholder="Email" />
-                <input type="file" accept="image/png, image/jpeg, application/pdf" onChange={handleFileChange} />
+                <input className="input-field" type="text" name="first_name" value={formData.first_name} onChange={handleChange} placeholder="First Name" />
+                <input className="input-field" type="text" name="last_name" value={formData.last_name} onChange={handleChange} placeholder="Last Name" />
+                <input className="input-field" type="email" name="email" value={formData.email} onChange={handleChange} placeholder="Email" />
+                <input className="input-field" type="file" accept="image/png, image/jpeg, application/pdf" onChange={handleFileChange} />
                 <button className="save-button" onClick={handleUpdate}>Save</button>
                 <button className="cancel-button" onClick={() => setIsEditing(false)}>Cancel</button>
               </>
@@ -287,30 +287,30 @@ const Dashboard = () => {
   
         {/* Deeds Statistics */}
         <div className="stats-section">
-          <h2 style={{ textAlign: "center", backgroundColor: "rgba(50, 205, 213, 0.75)", borderRadius: "10px", marginTop: "5px", marginBottom: "10px", backdropFilter: "blur(10px)", padding:"10px" }}>Deed Statistics</h2>
-          <p style={{ textAlign: "center", backgroundColor: "rgba(232, 27, 27, 0.75)", borderRadius: "10px", marginTop: "5px", marginBottom: "10px", backdropFilter: "blur(10px)", padding:"10px" }}>Unfulfilled: <strong>{unfulfilledDeeds}</strong></p>
-          <p style={{ textAlign: "center", backgroundColor: "rgba(50, 213, 66, 0.75)", borderRadius: "10px", marginTop: "5px", marginBottom: "10px", backdropFilter: "blur(10px)", padding:"10px" }}>Fulfilled: <strong>{fulfilledDeeds}</strong></p>
-          <p style={{ textAlign: "center", backgroundColor: "rgba(7, 12, 7, 0.75)", borderRadius: "10px", marginTop: "5px", marginBottom: "10px", backdropFilter: "blur(10px)", padding: "10px" }}>Deeds Fulfilled: <strong>{deedsFulfilledForOthers}</strong></p>
-          <p style={{ textAlign: "center", backgroundColor: "rgba(7, 12, 7, 0.75)", borderRadius: "10px", marginTop: "5px", marginBottom: "10px", backdropFilter: "blur(10px)", padding:"10px" }}>Volunteered: <strong>{completedVolunteeredDeeds.length}</strong></p>
+          <h2>Deed Statistics</h2>
+          <p>Unfulfilled: <strong className="statCount">{unfulfilledDeeds}</strong></p>
+          <p>Fulfilled: <strong className="statCount">{fulfilledDeeds}</strong></p>
+          <p>Deeds Fulfilled: <strong className="statCount">{deedsFulfilledForOthers}</strong></p>
+          <p>Volunteered: <strong className="statCount">{completedVolunteeredDeeds.length}</strong></p>
         </div>
       </div>
   
       {/* Bottom Section: Deeds List */}
       <div className="deeds-section">
-          <h2 style={{ textAlign: "center", backgroundColor: "rgba(50, 205, 213, 0.75)", borderRadius: "10px", marginTop: "30px", marginBottom: "10px", backdropFilter: "blur(10px)", padding:"10px" }} >Deeds</h2>
+          <h2 style={{ textAlign: "center", borderRadius: "10px", marginTop: "30px", marginBottom: "10px",padding:"10px" }} >Deeds</h2>
         {deeds.map((deed) => (
           <div className="deed-card" key={deed.id}>
-            <p>{deed.description} - {deed.deed_type}</p>
+            <p className="deedTitle">{deed.description} - {deed.deed_type}</p>
             <p>Status: <strong>{deed.status}</strong></p>
 
             {/* Show Volunteers */}
-            <p><strong>Volunteers:</strong></p>
+            <h3><strong>Volunteers:</strong></h3>
             {deed.volunteers.length > 0 ? (
               <ul>
                 {deed.volunteers.map((volunteer) => (
-                  <li key={volunteer.id}>
+                  <p key={volunteer.id}>
                     {volunteer.first_name} {volunteer.last_name}
-                  </li>
+                  </p>
                 ))}
               </ul>
             ) : (
@@ -325,14 +325,14 @@ const Dashboard = () => {
             )}
 
             {/* If deed is fulfilled, show confirmation */}
-            {deed.status === "fulfilled" && <p style={{ color: "green" }}>✔ Deed Completed</p>}
+            {deed.status === "fulfilled" && <p style={{ color: "#00eeff" }}>✔ Deed Completed</p>}
 
             <button className="delete-button" onClick={() => handleDeleteDeed(deed.id)}>Delete</button>
           </div>
         ))}
   
           {/* <div className="deeds-section"> */}
-            <button className="logout-button" onClick={() => setIsAddingDeed(!isAddingDeed)}>
+          <button className="logout-button" onClick={() => setIsAddingDeed(!isAddingDeed)}>
               {isAddingDeed ? "Cancel" : "Add Deed"}
             </button>
       
@@ -359,14 +359,13 @@ const Dashboard = () => {
 
         {/* volunteered deeds */}
         <div className="deeds-section">
-          <h2 style={{ textAlign: "center", backgroundColor: "rgba(50, 205, 213, 0.75)", borderRadius: "10px", marginTop: "30px", marginBottom: "10px", backdropFilter: "blur(10px)", padding: "10px" }} >Volunteered Deeds</h2>
-          <ul>
+          <h2 style={{ textAlign: "center", borderRadius: "10px", marginTop: "30px", marginBottom: "10px", backdropFilter: "blur(10px)", padding: "10px" }} >Volunteered Deeds</h2>
+          <ul className="deed-card" style={{ listStyleType: "none" }}>
             {volunteeredDeeds.length > 0 ? (
               volunteeredDeeds.map((deed) => (
                 <li key={deed.id} className="deed-card">
                   {/* <p>Deed requesters name</p> */}
-                  <p>{deed.description}</p>
-                  <p>{deed.deed_type}</p>
+                  <p>{deed.description} - {deed.deed_type}</p>
                   <p>Address: {deed.address}</p>
                   <p>Status: <strong>{deed.status}</strong></p>
                   {deed.status === "unfulfilled" && (

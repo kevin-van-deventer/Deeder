@@ -6,8 +6,9 @@
   width: 100%;
   height: 60px;
   padding-top: 10px;
-  background: rgba(50, 205, 213, 0.25); /* Similar semi-transparent effect */
+  background: rgb(34 36 36); /* Similar semi-transparent effect */
   backdrop-filter: blur(10px);
+  box-shadow: 0px 8px 30px rgb(0 233 250 / 32%), 0px 4px 15px rgba(0, 0, 0, 0.3);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -27,6 +28,16 @@
   background: none;
 }
 
+.webTitle {
+  font-family: "Kaisei HarunoUmi", serif !important;
+  color: white !important;
+  text-shadow: none;
+  font-weight: 800;
+  font-style: normal;
+  text-decoration: none;
+  font-size: 24px;
+}
+
 .nav-link {
   text-decoration: none;
   color: white;
@@ -42,7 +53,7 @@
 }
 
 .nav-button {
-  background: #32cdd5;
+  background: #0fe1eb40;
   color: white;
   font-size: 16px;
   font-weight: bold;
@@ -59,4 +70,38 @@
 
 .nav-button:focus {
   outline: rgba(50, 205, 213, 0.54) 3px solid;
+}
+
+/* Mobile optimization */
+@media (max-width: 768px) {
+  /* Mobile */
+  .navbar {
+    height: 80px;
+    padding: 5px 10px;
+  }
+
+  .webTitle {
+    font-size: 24px;
+  }
+
+  .nav-list {
+    gap: 0px;
+    flex-wrap: nowrap;
+    justify-content: space-evenly;
+  }
+
+  .nav-link {
+    text-decoration: none;
+    color: white;
+    font-size: 16px;
+    font-weight: 500;
+    padding: 2px 20px;
+    transition: 0.25s;
+    border-radius: 99px;
+  }
+
+  .nav-button {
+    font-size: 16px;
+    padding: 6px 10px;
+  }
 }
