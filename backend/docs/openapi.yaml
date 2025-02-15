@@ -1,0 +1,279 @@
+openapi: 3.0.0
+info:
+  title: Deeder API
+  description: API for managing users, deeds, and volunteer confirmations.
+  version: 1.0.0
+servers:
+  - url: http://localhost:3000
+    description: Local development server
+
+paths:
+  /api/register:
+    post:
+      summary: Register a new user
+      description: Allows a new user to register.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                first_name:
+                  type: string
+                  example: "John"
+                last_name:
+                  type: string
+                  example: "Doe"
+                email:
+                  type: string
+                  example: "john.doe@example.com"
+                password:
+                  type: string
+                  example: "password123"
+                id_document:
+                  type: string
+                  example: "ID123456"
+      responses:
+        201:
+          description: User registered successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/User"
+        422:
+          description: Validation error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "Validation failed: Email has already been taken"
+
+  /api/login:
+    post:
+      summary: Authenticate a user
+      description: Allows a user to log in and receive a JWT token.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  example: "john.doe@example.com"
+                password:
+                  type: string
+                  example: "password123"
+      responses:
+        200:
+          description: Authentication successful
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  token:
+                    type: string
+                    example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+        401:
+          description: Authentication failed
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "Invalid email or password"
+
+  /api/deeds:
+    post:
+      summary: Create a new deed
+      description: Allows a user to create a new deed request.
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                description:
+                  type: string
+                  example: "Help clean the park"
+                deed_type:
+                  type: string
+                  enum: ["one-time", "material"]
+                  example: "one-time"
+                lat:
+                  type: number
+                  example: -25.746111
+                lon:
+                  type: number
+                  example: 28.188056
+      responses:
+        201:
+          description: Deed created successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Deed"
+        422:
+          description: Validation error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "Validation failed: Description can't be blank"
+
+  /api/deeds/{id}/volunteer:
+    post:
+      summary: Volunteer for a deed
+      description: Allows a user to volunteer for a deed.
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        200:
+          description: Volunteered successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Volunteered successfully"
+        404:
+          description: Deed not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "Deed not found"
+
+  /api/deeds/{id}/confirm:
+    post:
+      summary: Confirm deed completion
+      description: Allows a volunteer to confirm completion of a deed.
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        200:
+          description: Completion confirmed
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Completion confirmed"
+        403:
+          description: User is not a volunteer for this deed
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "User is not a volunteer for this deed"
+        404:
+          description: Deed not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "Deed not found"
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+  schemas:
+    User:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+        first_name:
+          type: string
+          example: "John"
+        last_name:
+          type: string
+          example: "Doe"
+        email:
+          type: string
+          example: "john.doe@example.com"
+        id_document:
+          type: string
+          example: "ID123456"
+        created_at:
+          type: string
+          format: date-time
+          example: "2025-02-15T12:34:56Z"
+        updated_at:
+          type: string
+          format: date-time
+          example: "2025-02-15T12:34:56Z"
+
+    Deed:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+        description:
+          type: string
+          example: "Help clean the park"
+        deed_type:
+          type: string
+          example: "one-time"
+        lat:
+          type: number
+          example: -25.746111
+        lon:
+          type: number
+          example: 28.188056
+        status:
+          type: string
+          example: "unfulfilled"
+        created_at:
+          type: string
+          format: date-time
+          example: "2025-02-15T12:34:56Z"
+        updated_at:
+          type: string
+          format: date-time
+          example: "2025-02-15T12:34:56Z"

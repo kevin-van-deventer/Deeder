@@ -1,66 +1,96 @@
-**Github Setup**
-1) git init
-2) git remote add origin https://github.com/kevin-van-deventer/Deeder.git
-3) git remote -v
-4) git add .
-5) git commit -m "Commit Message"
-6) git push origin main
+# Deeder - Community Help Platform
 
-**Rails Setup**
-1) sudo apt update && sudo apt upgrade -y
-2) sudo apt install -y curl git build-essential libsqlite3-dev
-3) curl -sSL https://get.rvm.io | bash -s stable
-4) source ~/.rvm/scripts/rvm
-<!-- 5) rvm install ruby
-6) rvm use ruby --default -->
-7) gem install rails
-8) curl -fsSL https://deb.nodesource.com/setup_20.x | sudo -E bash -
-9) sudo apt install -y nodejs
-10) npm install --global yarn
-11) ruby -v / rails -v / node -v / yarn -v
+**Project Overview**
+Deeder is a community-driven platform where users can request help (deeds) and volunteers can step in to assist. Each request requires at least five volunteers to confirm the completion before it is marked as fulfilled. Requesters can confirm each request before or automatically after 5 volunteers have completed the deed request. The platform is designed to help communities come together to help each other in times of need.
 
-**Backend**
-12) rails new backend --api --database=sqlite3 --javascript=esbuild
-13) cd backend
-14) bundle add rack-cors
-15) update backend/config/initializers/cors.rb
-16) rails s
-17) User model - rails generate model User first_name:string last_name:string email:string password_digest:string id_document:string and update the model file
-18) rails db:migrate
-19) bundle add bcrypt
-20) rails active_storage:install
-21) rails db:migrate
-22) rails generate controller Users
-23) edit app/controllers/users_controller.rb
-24) Edit config/routes.rb
-25) Create a BaseController (app/controllers/application_controller.rb)
-26) create deeds model - rails generate model Deed description:string deed_type:string status:string requester_id:integer responder_id:integer  completed_by_id:integer lat:decimal lon:decimal
-rails db:migrate
-26.2) create a join table since multiple users can volunteer for one deed
-26.3) rails generate model DeedVolunteer user_id:integer deed_id:integer - rails db:migrate
-27) update the deeds and user model
-28) generate deeds controller rails generate controller deeds
-29) Edit app/controllers/deeds_controller.rb:
++.00+.## User Interactions
 
+### Sign Up and Register
 
-27) Update app/models/deed.rb:
-28) rails generate controller Deeds
-29) Edit app/controllers/deeds_controller.rb:
-30) Edit config/routes.rb: to add deeds route
-31) bundle add jwt
-32) bundle install
-33) config/secrets.yml add your secret key
-34) test the api routes
-35) 
+- Users can sign up by providing their first name, last name, email, password, and ID document.
+- Registration is handled through the frontend, which communicates with the backend API to create a new user.
 
+### Login
 
-**Frontend**
-) npx create-react-app frontend
-)npm install --legacy-peers-deps
-) npm install --force
-) npm install web-vitals
-) npm install react-router-dom axios
-) create new file called AppRouter.js
-) setup App.js and import router
-) npm install jwt-decode
+- Registered users can log in using their email and password.
+- Upon successful login, users receive a JWT token for authentication, which is used for subsequent API requests.
 
+### Create Deeds
+
+- Logged-in users can create new deeds by providing a description, deed type, and location (latitude and longitude).
+- The deed is stored in the backend database and is available for volunteers to view and respond to.
+
+### Volunteer for Deeds
+
+- Volunteers can view available deeds and choose to volunteer for them.
+- Each deed requires at least five volunteers to confirm completion before it is marked as fulfilled.
+
+### Confirm Completion
+
+- Requesters can confirm the completion of a deed manually or automatically after five volunteers have confirmed it.
+- The backend API handles the logic for confirming deed completion and updating the deed status.
+
+## Features
+
+### Map Integration
+
+- The platform includes a map feature that allows users to view the location of deeds.
+- The map is integrated using a mapping library (e.g., Google Maps or Leaflet) and displays markers for each deed's location.
+
+### Routing
+
+- The frontend uses React Router for client-side routing.
+- The main routes include:
+  - `/`: Home page
+  - `/login`: Login page
+  - `/register`: Registration page
+  - `/dashboard`: User dashboard where users can view and manage their deeds
+
+### Authentication
+
+- JWT (JSON Web Token) is used for user authentication.
+- Tokens are issued upon successful login and are required for accessing protected routes and API endpoints.
+
+### API Endpoints
+
+- The backend provides RESTful API endpoints for managing users and deeds.
+- Key endpoints include:
+  - `POST /api/register`: Register a new user
+  - `POST /api/login`: Authenticate a user and issue a JWT token
+  - `POST /api/deeds`: Create a new deed
+  - `GET /api/deeds`: Retrieve a list of deeds
+  - `POST /api/deeds/:id/volunteer`: Volunteer for a deed
+  - `POST /api/deeds/:id/confirm`: Confirm the completion of a deed
+
+## OpenAPI Documentation
+
+The API is documented using the OpenAPI specification. The `openapi.yaml` file located in the `backend/docs` directory provides detailed information about the available endpoints, request parameters, and responses.
+
+- [OpenAPI Documentation](./backend/docs/openapi.yaml)
+
+## Documentation
+
+For detailed setup instructions, please refer to the respective README files in the `frontend` and `backend` directories:
+
+- [Frontend README](./frontend/README.md)
+- [Backend README](./backend/README.md)
+
+## Deployment
+
+Follow the deployment instructions for both the frontend and backend to deploy the application to the chosen hosting provider.
+
+**Note:** Ensure that the backend API is running and accessible for the frontend to communicate with it.
+
+## Contributing
+
+We welcome contributions to improve Deeder. Please follow the standard GitHub workflow for contributing:
+
+1. Fork the repository
+2. Create a new branch for the feature or bugfix
+3. Commit the changes
+4. Push the branch to the fork
+5. Create a pull request
+
+## License
+
+This project is licensed under the MIT License. See the [LICENSE](./LICENSE) file for details.

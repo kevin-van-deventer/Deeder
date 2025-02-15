@@ -11,6 +11,9 @@ const mapContainerStyle = { width: "100%", height: "100vh", position: "relative"
 // chamge center of map to be current logged in users lat and lon
 const defaultCenter = { lat: -25.7479, lng: 28.2293 }; // Default center (Pretoria, South Africa)
 
+const oneTimeIcon = "http://maps.google.com/mapfiles/ms/icons/blue-dot.png"; // Blue marker for one-time deeds
+const materialIcon = "http://maps.google.com/mapfiles/ms/icons/green-dot.png"; // Green marker for material deeds
+
 const MapsPage = () => {
   const [deeds, setDeeds] = useState([]);
   const [selectedDeed, setSelectedDeed] = useState(null);
@@ -101,7 +104,12 @@ const MapsPage = () => {
             <LoadScriptNext googleMapsApiKey={apiKey}>
               <GoogleMap mapContainerStyle={mapContainerStyle} zoom={10} center={userLocation}>
                 {deeds.map((deed) => (
-                  <Marker key={deed.id} position={{ lat: parseFloat(deed.latitude), lng: parseFloat(deed.longitude) }} onClick={() => setSelectedDeed(deed)} />
+                  <Marker
+                    key={deed.id}
+                    position={{ lat: parseFloat(deed.latitude), lng: parseFloat(deed.longitude) }}
+                    onClick={() => setSelectedDeed(deed)}
+                    icon={deed.deed_type === "one-time" ? oneTimeIcon : materialIcon} // Set marker icon based on deed type
+                  />
                 ))}
 
                 {selectedDeed && (
