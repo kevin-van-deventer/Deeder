@@ -17,7 +17,8 @@ class DeedsController < ApplicationController
       deed.as_json(only: [:id, :description, :deed_type, :latitude, :longitude, :status, :address, :created_at]).merge(
         volunteer_count: deed.volunteers.count,
         volunteers: deed.volunteers.as_json(only: [:id, :first_name, :last_name]),
-        completed_by: deed.completed_by.as_json(only: [:id, :first_name, :last_name])
+        completed_by: deed.completed_by.as_json(only: [:id, :first_name, :last_name]),
+        completion_status: deed.completion_status
       )
     }
     end
@@ -29,9 +30,10 @@ class DeedsController < ApplicationController
                       .merge(
                         volunteer_count: deed.volunteers.count,
                         volunteers: deed.volunteers.as_json(only: [:id, :first_name, :last_name]),
-                        completed_by: deed.completed_by&.as_json(only: [:id, :first_name, :last_name])
+                        completed_by: deed.completed_by&.as_json(only: [:id, :first_name, :last_name]),
+                        completion_status: deed.completion_status
                       )
-    rescue ActiveRecord::RecordNotFound
+      rescue ActiveRecord::RecordNotFound
       render json: { error: "Deed not found" }, status: :not_found
     end
 
@@ -122,6 +124,26 @@ class DeedsController < ApplicationController
       end
 
       render json: { message: "Your confirmation has been recorded. Waiting for the other party to confirm.", deed: deed }, status: :ok
+    end
+
+    def confirm_completion
+      deed = Deed.find(params[:id])
+      volunteer = current_user
+  
+      # Check if user is a volunteer for this deed
+      unless deed.volunteers.include?(volunteer)
+        return render json: { error: "You are not a volunteer for this deed" }, status: :forbidden
+      end
+  
+      # Mark deed completion
+      completion = deed.deed_completions.find_or_initialize_by(user: volunteer)
+      completion.confirmed = true
+      completion.save!
+  
+      # Check if deed should now be marked as fulfilled
+      deed.fully_confirmed?
+  
+      render json: { message: "Completion confirmed", completion_status: deed.completion_status }
     end
 
     def deed_params

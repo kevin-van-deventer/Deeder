@@ -12,16 +12,6 @@ class Deed < ApplicationRecord
     # confirm if both requester and deeder mark deed as fulfilled
     has_many :deed_completions, dependent: :destroy
     has_many :volunteers, through: :deed_completions, source: :user
-    def requester_confirmed?
-      deed_completions.exists?(user_id: requester_id, confirmed: true)
-    end
-    def volunteer_confirmed?
-      deed_completions.where.not(user_id: requester_id).where(confirmed: true).exists?
-    end
-    def fully_confirmed?
-      requester_confirmed? && volunteer_confirmed?
-    end
-
 
     has_many :deed_volunteers
     has_many :volunteers, through: :deed_volunteers, source: :user
@@ -30,6 +20,26 @@ class Deed < ApplicationRecord
     validates :deed_type, inclusion: { in: ["one-time", "material"] }
     validates :status, inclusion: { in: ["fulfilled", "unfulfilled"] }
     validates :latitude, :longitude, presence: true
-    validates :address, presence: true # Ensure an address is always included
+    validates :address, presence: true
+    # Ensure at least 5 volunteers are assigned
+
+    def enough_volunteers_confirmed?
+      deed_completions.where(confirmed: true).count >= 5
+    end
+  
+    # 🔹 Only mark the deed as fulfilled when 5+ volunteers confirm
+    def fully_confirmed?
+      if enough_volunteers_confirmed?
+        update(status: "fulfilled")  # ✅ Auto-update status when condition is met
+        return true
+      end
+      false
+    end
+  
+    # 🔹 Dynamic method to show "Complete" or "In Progress" in the frontend
+    def completion_status
+      enough_volunteers_confirmed? ? "Complete" : "In Progress"
+    end
+
   end
   

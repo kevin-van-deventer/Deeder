@@ -225,7 +225,7 @@ const Dashboard = () => {
   const handleConfirmCompletion = async (deedId) => {
     try {
       const response = await axios.post(
-        `http://localhost:3000/deeds/${deedId}/complete`,
+        `http://localhost:3000/deeds/${deedId}/confirm_complete`,
         {},
         { headers: { Authorization: `Bearer ${token}` } }
       );
@@ -301,7 +301,7 @@ const Dashboard = () => {
         {deeds.map((deed) => (
           <div className="deed-card" key={deed.id}>
             <p className="deedTitle">{deed.description} - {deed.deed_type}</p>
-            <p>Status: <strong>{deed.status}</strong></p>
+            <p>Status: <strong>{deed.completion_status}</strong></p>
 
             {/* Show Volunteers */}
             <h3><strong>Volunteers:</strong></h3>

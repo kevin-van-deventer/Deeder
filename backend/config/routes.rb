@@ -20,6 +20,7 @@ Rails.application.routes.draw do
     member do
       post 'complete' # Mark deed as complete (by both requester and volunteer)
       post 'volunteer' # Volunteer for a deed
+      # post: 'confirm_completion'
     end
   end
 
