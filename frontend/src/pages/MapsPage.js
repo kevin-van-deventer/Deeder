@@ -115,10 +115,12 @@ const MapsPage = () => {
                 {selectedDeed && (
                   <InfoWindow position={{ lat: parseFloat(selectedDeed.latitude), lng: parseFloat(selectedDeed.longitude) }} onCloseClick={() => setSelectedDeed(null)}>
                     <div>
-                      <h3>{selectedDeed.description}</h3>
-                      <p><strong>Type:</strong> {selectedDeed.deed_type}</p>
-                      <p><strong>Volunteers:</strong> {selectedDeed.volunteer_count}</p>
-                      <p><strong>Status:</strong> {selectedDeed.status}</p>
+                      <p><strong>{selectedDeed.description}</strong></p>
+                      <p><strong>{selectedDeed.deed_type}</strong></p>
+                      <p><strong>Deeders:</strong> {selectedDeed.volunteer_count}</p>
+                      {/* <p><strong>Status:</strong> {selectedDeed.status}</p> */}
+                      <p><strong> {formatDate(selectedDeed.created_at)}</strong></p>
+
                       {userId && selectedDeed.requester_id !== userId && (
                         <button onClick={() => handleVolunteer(selectedDeed.id, selectedDeed.requester_id)}>Accept</button>
                       )}
