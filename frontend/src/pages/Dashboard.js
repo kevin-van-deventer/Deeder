@@ -201,6 +201,7 @@ const Dashboard = () => {
       alert("Failed to delete deed.");
     }
   };
+  
   const handleCompleteDeed = async (deedId) => {
     if (!window.confirm("Are you sure you want to mark this deed as completed?")) return;
   
@@ -237,7 +238,19 @@ const Dashboard = () => {
       alert(error.response?.data?.error || "Failed to confirm completion.");
     }
   };
-  
+
+  const handleRepostDeed = async (deedId) => {
+    try {
+      const response = await axios.post(`http://localhost:3000/deeds/${deedId}/repost`, {}, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      alert(response.data.message);
+      fetchDeeds(user.id); // Refresh deeds list
+    } catch (error) {
+      console.error("Error reposting deed:", error);
+      alert(error.response?.data?.error || "Failed to repost deed.");
+    }
+  };
 
   const handleLogout = () => {
     localStorage.removeItem("token");
@@ -297,39 +310,52 @@ const Dashboard = () => {
   
       {/* Bottom Section: Deeds List */}
       <div className="deeds-section">
-          <h2 style={{ textAlign: "center", borderRadius: "10px", marginTop: "30px", marginBottom: "10px",padding:"10px" }} >Deeds</h2>
-        {deeds.map((deed) => (
-          <div className="deed-card" key={deed.id}>
-            <p className="deedTitle">{deed.description} - {deed.deed_type}</p>
-            <p>Status: <strong>{deed.completion_status}</strong></p>
+        <h2 style={{ textAlign: "center", borderRadius: "10px", marginTop: "30px", marginBottom: "10px",padding:"10px" }} >Deeds</h2>
+        {deeds.map((deed) => {
+          const isExpired = new Date(deed.created_at) < new Date(Date.now() - 24 * 60 * 60 * 1000);          
+          return (
+            <div className="deed-card" key={deed.id}>
+              <p className="deedTitle">{deed.description} - {deed.deed_type}</p>
+              <p>Status: <strong>{deed.completion_status}</strong></p>
 
-            {/* Show Volunteers */}
-            <h3><strong>Volunteers:</strong></h3>
-            {deed.volunteers.length > 0 ? (
-              <ul>
-                {deed.volunteers.map((volunteer) => (
-                  <p key={volunteer.id}>
-                    {volunteer.first_name} {volunteer.last_name}
-                  </p>
-                ))}
-              </ul>
-            ) : (
-              <p>No volunteers yet.</p>
-            )}
+              {/* Show Volunteers */}
+              <h3><strong>Volunteers:</strong></h3>
+              {deed.volunteers && deed.volunteers.length > 0 ? (
+                <ul>
+                  {deed.volunteers.map((volunteer) => (
+                    <p key={volunteer.id}>
+                      {volunteer.first_name} {volunteer.last_name}
+                    </p>
+                  ))}
+                </ul>
+              ) : (
+                <p>No volunteers yet.</p>
+              )}
 
-            {/* Mark as Completed Button */}
-            {deed.status === "unfulfilled" && (
-              <button className="complete-button" onClick={() => handleConfirmCompletion(deed.id)}>
-                Mark as Completed
-              </button>
-            )}
+              {/* Show Repost Button Only for Expired Deeds */}
+              {isExpired && deed.status === "unfulfilled" ? (
+                <button className="repost-button" onClick={() => handleRepostDeed(deed.id)}>
+                  Repost
+                </button>
+              ) : (
+                <p><strong>Expired</strong></p>
+              )}
 
-            {/* If deed is fulfilled, show confirmation */}
-            {deed.status === "fulfilled" && <p style={{ color: "#00eeff" }}>✔ Deed Completed</p>}
+              {/* Mark as Completed Button */}
+              {deed.status === "unfulfilled" && (
+                <button className="complete-button" onClick={() => handleConfirmCompletion(deed.id)}>
+                  Mark as Completed
+                </button>
+              )}
 
-            <button className="delete-button" onClick={() => handleDeleteDeed(deed.id)}>Delete</button>
-          </div>
-        ))}
+              {/* If deed is fulfilled, show confirmation */}
+              {deed.status === "fulfilled" && <p style={{ color: "#00eeff" }}>✔ Deed Completed</p>}
+
+              <button className="delete-button" onClick={() => handleDeleteDeed(deed.id)}>Delete</button>
+            </div>
+          );
+        })}
+
   
           {/* <div className="deeds-section"> */}
           <button className="logout-button" onClick={() => setIsAddingDeed(!isAddingDeed)}>

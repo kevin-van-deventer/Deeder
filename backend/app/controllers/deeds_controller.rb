@@ -1,6 +1,6 @@
 class DeedsController < ApplicationController
     before_action :authenticate_user, except: [:index, :show]
-    before_action :set_deed, only: [:destroy]
+    before_action :set_deed, only: [:destroy, :repost]
   
     # List all unfulfilled deeds
     def index
@@ -10,7 +10,8 @@ class DeedsController < ApplicationController
         # deeds = user.requested_deeds + user.volunteered_deeds
         # render json: deeds
       else
-        deeds = Deed.includes(:volunteers).where(status: 'unfulfilled') # Default: only unfulfilled deeds
+        deeds = Deed.includes(:volunteers).where("status = ? AND created_at >= ?", "unfulfilled", 24.hours.ago) # Default: only unfulfilled deeds
+        # deeds = Deed.includes(:volunteers).where(status: 'unfulfilled') # Default: only unfulfilled deeds
       end
     
       render json: deeds.map { |deed| 
@@ -59,7 +60,7 @@ class DeedsController < ApplicationController
 
     def set_deed
       @deed = Deed.find(params[:id])
-    rescue ActiveRecord::RecordNotFound
+      rescue ActiveRecord::RecordNotFound
       render json: { error: "Deed not found" }, status: :not_found
     end
   
@@ -97,7 +98,6 @@ class DeedsController < ApplicationController
         )
       }
     end
-
 
     # Mark a deed as completed by both users
     def complete
@@ -144,6 +144,16 @@ class DeedsController < ApplicationController
       deed.fully_confirmed?
   
       render json: { message: "Completion confirmed", completion_status: deed.completion_status }
+    end
+
+    # Repost a deed by updating its created_at timestamp
+    def repost
+      if @deed.requester_id == @current_user.id
+        @deed.update(created_at: Time.current)
+        render json: { message: "Deed reposted successfully for another 24 hours." }, status: :ok
+      else
+        render json: { error: "You can only repost your own deeds." }, status: :unauthorized
+      end
     end
 
     def deed_params
