@@ -17,6 +17,7 @@ const materialIcon = "http://maps.google.com/mapfiles/ms/icons/green-dot.png"; /
 const MapsPage = () => {
   const [deeds, setDeeds] = useState([]);
   const [selectedDeed, setSelectedDeed] = useState(null);
+  const [unfulfilledDeeds, setUnfulfilledDeeds] = useState(0); // ✅ Fix: Add state for unfulfilled deeds
   const [userLocation, setUserLocation] = useState(defaultCenter); // Store user’s live location
   
   const apiKey = "AIzaSyAx_Rbj5JBqB_QStMi27jDFWMf3HJ-aZm0"; // Replace with your actual API key
@@ -32,7 +33,12 @@ const MapsPage = () => {
   const fetchDeeds = async () => {
     try {
       const response = await axios.get("http://localhost:3000/deeds");
+      
       setDeeds(response.data);
+      // Calculate unfulfilled deeds count inline
+      const unfulfilledCount = response.data.filter(deed => deed.status === "unfulfilled").length;
+      setUnfulfilledDeeds(unfulfilledCount);
+      
     } catch (error) {
       console.error("Error fetching deeds:", error);
     }
@@ -133,7 +139,7 @@ const MapsPage = () => {
 
           {/* Right Side: Latest Deeds */}
           <div className="deeds-list">
-            <h2>Latest Deeds</h2>
+            <h2>Deeds { unfulfilledDeeds }</h2>
             {deeds.length === 0 ? <p>No deeds available.</p> : (
               deeds.map((deed) => (
                 <div key={deed.id} className="deed-card">

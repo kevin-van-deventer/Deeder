@@ -210,11 +210,22 @@ p {
 }
 
 .delete-button:hover {
-  background: rgba(255, 0, 0, 1);
+  background: rgba(255, 0, 0, 0.623);
 }
 
 .complete-button {
-  background: rgba(0, 0, 0, 0.7);
+  background: rgba(148, 209, 115, 0.7);
+  color: white;
+  border: none;
+  padding: 10px;
+  margin-top: 10px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: 0.25s;
+}
+
+.repost-button {
+  background: rgba(255, 140, 0, 0.7);
   color: white;
   border: none;
   padding: 10px;

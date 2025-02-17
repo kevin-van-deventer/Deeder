@@ -110,6 +110,8 @@ const Dashboard = () => {
       const response = await axios.get(`http://localhost:3000/users/${userId}/deeds`, {
         headers: { Authorization: `Bearer ${token}` },
       });
+
+      
       setDeeds(response.data);
     } catch (error) {
       console.error("Error fetching deeds:", error);
@@ -201,7 +203,7 @@ const Dashboard = () => {
       alert("Failed to delete deed.");
     }
   };
-  
+
   const handleCompleteDeed = async (deedId) => {
     if (!window.confirm("Are you sure you want to mark this deed as completed?")) return;
   
