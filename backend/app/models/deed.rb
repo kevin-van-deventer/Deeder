@@ -1,4 +1,13 @@
 class Deed < ApplicationRecord
+    after_commit :broadcast_deeds_update, on: [:create, :update, :destroy]
+
+    def broadcast_deeds_update
+      ActionCable.server.broadcast("deeds_channel", {
+        unfulfilled_count: Deed.where(status: "unfulfilled").count,
+        deeds: Deed.where(status: "unfulfilled").as_json(only: [:id, :description, :deed_type, :status, :latitude, :longitude, :address])
+      })
+    end
+    
 
     before_validation :set_default_status, on: :create
 
@@ -14,7 +23,7 @@ class Deed < ApplicationRecord
     has_many :volunteers, through: :deed_completions, source: :user
 
     has_many :deed_volunteers
-    has_many :volunteers, through: :deed_volunteers, source: :user
+    # has_many :volunteers, through: :deed_volunteers, source: :user
   
     validates :description, presence: true, length: { maximum: 300 }
     validates :deed_type, inclusion: { in: ["one-time", "material"] }
@@ -40,6 +49,8 @@ class Deed < ApplicationRecord
     def completion_status
       enough_volunteers_confirmed? ? "Complete" : "In Progress"
     end
+
+    
 
   end
   

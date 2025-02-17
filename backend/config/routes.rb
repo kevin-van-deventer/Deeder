@@ -1,4 +1,5 @@
 Rails.application.routes.draw do
+  mount ActionCable.server => "/cable"
 
   # User Routes
   resources :users, only: [:create, :show, :update] do

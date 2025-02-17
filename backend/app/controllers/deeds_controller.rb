@@ -50,11 +50,16 @@ class DeedsController < ApplicationController
 
     # DELETE /users/:user_id/deeds/:id
     def destroy
-      if @deed.requester_id == @current_user.id
-        @deed.destroy
-        render json: { message: "Deed successfully deleted" }, status: :ok
+      @deed = Deed.find(params[:id])
+  
+      if @deed.destroy
+        ActionCable.server.broadcast("deeds_channel", {
+          unfulfilled_count: Deed.where(status: "unfulfilled").count,
+          deeds: Deed.where(status: "unfulfilled")
+        }) # ✅ Broadcast updated count
+        head :no_content
       else
-        render json: { error: "You can only delete deeds you created" }, status: :forbidden
+        render json: { error: "Failed to delete deed" }, status: :unprocessable_entity
       end
     end
 

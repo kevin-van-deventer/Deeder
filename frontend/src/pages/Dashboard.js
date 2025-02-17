@@ -4,6 +4,8 @@ import { jwtDecode } from "jwt-decode";
 import { useNavigate } from "react-router-dom";
 import Navbar from "../components/NavBar";
 import "./Dashboard.css"; // Import the new CSS file
+import { createConsumer } from "@rails/actioncable";
+
 
 const Dashboard = () => {
   const navigate = useNavigate();
@@ -34,6 +36,21 @@ const Dashboard = () => {
       fetchUserDetails(decodedToken.user_id);
       fetchDeeds(decodedToken.user_id);
     }
+
+    // Set up ActionCable to listen for deed updates
+  const cable = createConsumer("ws://localhost:3000/cable");
+
+  const deedsChannel = cable.subscriptions.create("DeedsChannel", {
+    received: (data) => {
+      console.log("Received deed update:", data);
+      setDeeds(data.deeds);
+    },
+  });
+
+  return () => {
+    deedsChannel.unsubscribe();
+  };
+
   }, [token]);
 
   // fetch user details from api
