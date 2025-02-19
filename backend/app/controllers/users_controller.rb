@@ -63,7 +63,13 @@ class UsersController < ApplicationController
         end
       end
 
-    private
+      def my_chat_rooms
+        chat_rooms = ChatRoom.joins(:deed)
+                             .where("deeds.requester_id = ? OR EXISTS (SELECT 1 FROM deed_volunteers WHERE deed_volunteers.deed_id = deeds.id AND deed_volunteers.user_id = ?)", current_user.id, current_user.id)
+        render json: chat_rooms
+      end
+    
+      private
   
     def user_params
         params.require(:user).permit(:first_name, :last_name, :email, :password, :password_confirmation, :id_document)

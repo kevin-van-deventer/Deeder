@@ -127,7 +127,6 @@ const Dashboard = () => {
       const response = await axios.get(`http://localhost:3000/users/${userId}/deeds`, {
         headers: { Authorization: `Bearer ${token}` },
       });
-
       
       setDeeds(response.data);
       const volunteeredResponse = await axios.get(`http://localhost:3000/users/${userId}/volunteered_deeds`, {

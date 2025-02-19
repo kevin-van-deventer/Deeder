@@ -8,12 +8,8 @@ Rails.application.routes.draw do
   end
 
   get '/users/:id', to: 'users#show'
-  
-  # resources :deeds do
-  #   member do
-  #     post 'complete'
-  #   end
-  # end
+  get "/users/:id/chat_rooms", to: "users#my_chat_rooms"
+  post "/chat_rooms/:chat_room_id/messages", to: "messages#create"
   
   # Routes for deeds that aren't tied to a specific user
   # General Deed Routes

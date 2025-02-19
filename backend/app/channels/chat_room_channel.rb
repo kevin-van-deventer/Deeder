@@ -2,7 +2,7 @@ class ChatRoomChannel < ApplicationCable::Channel
   def subscribed
     @chat_room = ChatRoom.find(params[:id])
 
-    if @chat_room.participants.include?(current_user)
+    if @chat_room.deed.requester == current_user || @chat_room.deed.volunteers.include?(current_user)
       stream_for @chat_room
     else
       reject

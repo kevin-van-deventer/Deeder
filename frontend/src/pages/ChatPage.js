@@ -7,6 +7,7 @@ import "./ChatPage.css";
 const ChatPage = () => {
   const [user, setUser] = useState(null);
   const [deeds, setDeeds] = useState([]);
+  const [volunteeredDeeds, setVolunteeredDeeds] = useState([]);
   const [chatRoom, setChatRoom] = useState(null);
   const [messages, setMessages] = useState([]);
   const [messageContent, setMessageContent] = useState("");
@@ -42,6 +43,11 @@ const ChatPage = () => {
         headers: { Authorization: `Bearer ${token}` },
       });
       setDeeds(response.data);
+      const volunteeredResponse = await axios.get(`http://localhost:3000/users/${userId}/volunteered_deeds`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+  
+      setVolunteeredDeeds(volunteeredResponse.data);
     } catch (error) {
       console.error("Error fetching deeds:", error);
     }
@@ -112,7 +118,7 @@ const ChatPage = () => {
                       <p>{volunteer.first_name} {volunteer.last_name}</p>
                       <button
                         className="chat-button"
-                        onClick={() => handleStartChat(deed, volunteer)}
+                        onClick={() => handleStartChat(deed, deed.volunteers[0])}
                       >
                         Chat with {volunteer.first_name}
                       </button>
@@ -122,6 +128,26 @@ const ChatPage = () => {
               ) : (
                 <p>No volunteers yet.</p>
               )}
+            </div>
+          ))
+        ) : (
+          <p>No deeds found.</p>
+        )}
+        {volunteeredDeeds.length > 0 ? (
+          volunteeredDeeds.map((deed) => (
+            <div key={deed.id} className="deed-card">
+              <h3>{deed.description}</h3>
+              {/* List of Volunteers */}
+                <div className="volunteer-list">
+                    <div key={deed.id} className="volunteer-item">
+                      <button
+                        className="chat-button"
+                        onClick={() => handleStartChat(deed, user)}
+                      >
+                        Chat
+                      </button>
+                    </div>
+                </div>
             </div>
           ))
         ) : (
