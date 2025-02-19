@@ -15,7 +15,13 @@ FROM docker.io/library/ruby:$RUBY_VERSION-slim AS base
 WORKDIR /rails
 
 # Install base packages
-RUN apt-get update -qq && apt-get install -y build-essential postgresql-client libpq-dev curl
+#RUN curl https://deb.nodesource.com/setup_12.x | bash
+#RUN curl https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add -
+#RUN echo "deb https://dl.yarnpkg.com/debian/ stable main" | tee /etc/apt/sources.list.d/yarn.list
+
+RUN apt-get update -qq && \
+    apt-get install --no-install-recommends -y curl libjemalloc2 libvips sqlite3 libpq-dev postgresql-client && \
+    rm -rf /var/lib/apt/lists /var/cache/apt/archives 
 
 # Set production environment
 ENV RAILS_ENV="production" \
@@ -35,7 +41,10 @@ RUN apt-get update -qq && \
 ARG NODE_VERSION=22.13.0
 ARG YARN_VERSION=1.22.22
 ENV PATH=/usr/local/node/bin:$PATH
-RUN apt-get install -y nodejs npm && npm install -g yarn
+RUN curl -sL https://github.com/nodenv/node-build/archive/master.tar.gz | tar xz -C /tmp/ && \
+    /tmp/node-build-master/bin/node-build "${NODE_VERSION}" /usr/local/node && \
+    npm install -g yarn@$YARN_VERSION && \
+    rm -rf /tmp/node-build-master
 
 # Install application gems
 COPY Gemfile Gemfile.lock ./
@@ -44,8 +53,9 @@ RUN bundle install && \
     bundle exec bootsnap precompile --gemfile
 
 # Install node modules
-COPY package.json yarn.lock ./
-RUN yarn install --frozen-lockfile
+COPY package.json package-lock.json ./
+#RUN yarn install --frozen-lockfile
+RUN npm ci
 
 # Copy application code
 COPY . .
