@@ -1,36 +1,81 @@
-/* src/styles/ChatPage.css */
 .chat-container {
-  max-width: 600px;
+  display: flex;
+  gap: 20px;
+  max-width: 1200px;
   margin: auto;
   padding: 20px;
-  border: 1px solid #ddd;
-  border-radius: 5px;
 }
 
-.messages {
-  border: 1px solid #ccc;
-  height: 300px;
-  overflow-y: scroll;
+/* Left Column (30%) - Volunteers */
+.volunteer-column {
+  width: 30%;
+  background: #f8f9fa;
+  padding: 15px;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  overflow-y: auto;
+  max-height: 80vh;
+}
+
+h2 {
+  text-align: center;
+}
+
+.deed-card {
+  background: #ffffff;
   padding: 10px;
-  margin-bottom: 10px;
+  border-radius: 8px;
+  margin-bottom: 15px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
-.message {
-  padding: 5px;
-  border-bottom: 1px solid #eee;
+.volunteer-list {
+  list-style: none;
+  padding: 0;
 }
 
-form {
+.volunteer-item {
+  background: #eee;
+  padding: 10px;
+  margin-top: 5px;
+  border-radius: 5px;
   display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
-input {
-  flex: 1;
-  padding: 8px;
-  margin-right: 5px;
-}
-
-button {
-  padding: 8px;
+/* Chat Button */
+.chat-button {
+  background: #06c1ce;
+  color: white;
+  border: none;
+  padding: 8px 12px;
+  border-radius: 5px;
   cursor: pointer;
+  transition: 0.3s;
+}
+
+.chat-button:hover {
+  background: #048ba8;
+}
+
+/* Right Column (70%) - Chat Messages */
+.chat-column {
+  width: 70%;
+  background: #ffffff;
+  padding: 15px;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.chat-box {
+  height: 400px;
+  overflow-y: auto;
+  border: 1px solid #ccc;
+  padding: 15px;
+  background: #f4f4f4;
+  border-radius: 8px;
 }

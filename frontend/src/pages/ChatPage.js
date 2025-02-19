@@ -1,100 +1,161 @@
-import React, { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
-import consumer from "../services/actionCableConsumer";
+import React, { useEffect, useState } from "react";
 import axios from "axios";
+import { jwtDecode } from "jwt-decode";
+import { createConsumer } from "@rails/actioncable";
+import "./ChatPage.css"; 
 
 const ChatPage = () => {
-  const { requesterId, volunteerId } = useParams(); // Get user IDs from URL
+  const [user, setUser] = useState(null);
+  const [deeds, setDeeds] = useState([]);
+  const [chatRoom, setChatRoom] = useState(null);
   const [messages, setMessages] = useState([]);
-  const [newMessage, setNewMessage] = useState("");
-  const [chatRoomId, setChatRoomId] = useState(null);
+  const [messageContent, setMessageContent] = useState("");
+  const [selectedChatUser, setSelectedChatUser] = useState(null);
 
   const token = localStorage.getItem("token");
 
   useEffect(() => {
-    const fetchChatRoom = async () => {
-      try {
-        const response = await axios.post(
-          `http://localhost:3000/chat_rooms`,
-          { deed_id: requesterId }, // Use requesterId to find the deed
-          { headers: { Authorization: `Bearer ${token}` } }
-        );
+    if (token) {
+      const decodedToken = jwtDecode(token);
+      fetchUserDetails(decodedToken.user_id);
+      fetchDeeds(decodedToken.user_id);
+    }
+  }, [token]);
 
-        setChatRoomId(response.data.chat_room.id);
-        fetchMessages(response.data.chat_room.id);
-      } catch (error) {
-        console.error("Error fetching chat room:", error);
-      }
-    };
-
-    const fetchMessages = async (chatRoomId) => {
-      try {
-        const response = await axios.get(
-          `http://localhost:3000/chat_rooms/${chatRoomId}`,
-          { headers: { Authorization: `Bearer ${token}` } }
-        );
-
-        setMessages(response.data.messages);
-      } catch (error) {
-        console.error("Error fetching messages:", error);
-      }
-    };
-
-    fetchChatRoom();
-  }, [requesterId, token]);
-
-  useEffect(() => {
-    if (!chatRoomId) return;
-
-    const subscription = consumer.subscriptions.create(
-      { channel: "ChatRoomChannel", id: chatRoomId },
-      {
-        received(data) {
-          setMessages((prev) => [...prev, data.message]);
-        },
-      }
-    );
-
-    return () => {
-      subscription.unsubscribe();
-    };
-  }, [chatRoomId]);
-
-  const handleSend = async (e) => {
-    e.preventDefault();
-    if (!newMessage.trim() || !chatRoomId) return;
-
+  // Fetch logged-in user details
+  const fetchUserDetails = async (userId) => {
+    if (!userId) return;
     try {
-      await axios.post(
-        `http://localhost:3000/chat_rooms/${chatRoomId}/messages`,
-        { content: newMessage },
+      const response = await axios.get(`http://localhost:3000/users/${userId}`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      setUser(response.data);
+    } catch (error) {
+      console.error("Error fetching user details:", error);
+    }
+  };
+
+  // Fetch deeds created by logged-in user
+  const fetchDeeds = async (userId) => {
+    try {
+      const response = await axios.get(`http://localhost:3000/users/${userId}/deeds`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      setDeeds(response.data);
+    } catch (error) {
+      console.error("Error fetching deeds:", error);
+    }
+  };
+
+  // Start chat with a volunteer
+  const handleStartChat = async (deed, volunteer) => {
+    try {
+      const response = await axios.post(
+        `http://localhost:3000/chat_rooms`,
+        { deed_id: deed.id, recipient_id: volunteer.id },
         { headers: { Authorization: `Bearer ${token}` } }
       );
-      setNewMessage("");
+  
+      setChatRoom(response.data.chat_room);
+      setMessages(response.data.messages);
+      setSelectedChatUser(volunteer);
+  
+      // Setup WebSocket connection for real-time messages
+      const cable = createConsumer("ws://localhost:3000/cable");
+      cable.subscriptions.create(
+        { channel: "ChatRoomChannel", id: response.data.chat_room.id },
+        {
+          received: (newMessage) => {
+            setMessages((prevMessages) => [...prevMessages, newMessage]);
+          },
+        }
+      );
+    } catch (error) {
+      console.error("Error starting chat:", error);
+      alert("Failed to start chat.");
+    }
+  };
+  
+
+  // Send a message
+  const handleSendMessage = async () => {
+    if (!messageContent.trim() || !chatRoom) return;
+    
+    try {
+      await axios.post(
+        `http://localhost:3000/chat_rooms/${chatRoom.id}/messages`,
+        { content: messageContent },
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+
+      setMessageContent(""); // Clear input after sending
     } catch (error) {
       console.error("Error sending message:", error);
+      alert("Failed to send message.");
     }
   };
 
   return (
     <div className="chat-container">
-      <h2>Chat</h2>
-      <div className="messages">
-        {messages.map((msg, index) => (
-          <div key={index} className="message">
-            <strong>{msg.user.name}:</strong> {msg.content}
-          </div>
-        ))}
+      {/* Left Column - List of Volunteers */}
+      <div className="volunteer-column">
+        <h2>My Volunteers</h2>
+        {deeds.length > 0 ? (
+          deeds.map((deed) => (
+            <div key={deed.id} className="deed-card">
+              <h3>{deed.description}</h3>
+              {/* List of Volunteers */}
+              {deed.volunteers.length > 0 ? (
+                <div className="volunteer-list">
+                  {deed.volunteers.map((volunteer) => (
+                    <div key={volunteer.id} className="volunteer-item">
+                      <p>{volunteer.first_name} {volunteer.last_name}</p>
+                      <button
+                        className="chat-button"
+                        onClick={() => handleStartChat(deed, volunteer)}
+                      >
+                        Chat with {volunteer.first_name}
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <p>No volunteers yet.</p>
+              )}
+            </div>
+          ))
+        ) : (
+          <p>No deeds found.</p>
+        )}
       </div>
-      <form onSubmit={handleSend}>
-        <input
-          type="text"
-          value={newMessage}
-          onChange={(e) => setNewMessage(e.target.value)}
-          placeholder="Type a message..."
-        />
-        <button type="submit">Send</button>
-      </form>
+
+      {/* Right Column - Chat Messages */}
+      <div className="chat-column">
+        <h2>Chat Window</h2>
+        {chatRoom ? (
+          <div>
+            <h3>Chat with {selectedChatUser?.first_name}</h3>
+            <div className="chat-box">
+              {messages.map((msg, index) => (
+                <p key={index} className={msg.sender_id === user.id ? "outgoing" : "incoming"}>
+                  {msg.content}
+                </p>
+              ))}
+            </div>
+            <div className="chat-input">
+              <input
+                type="text"
+                value={messageContent}
+                onChange={(e) => setMessageContent(e.target.value)}
+                placeholder="Type a message..."
+              />
+              <button onClick={handleSendMessage}>Send</button>
+            </div>
+          </div>
+        ) : (
+          <p>Select a volunteer to start a chat.</p>
+        )}
+      </div>
     </div>
   );
 };

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_02_19_082222) do
+ActiveRecord::Schema[8.0].define(version: 2025_02_19_145114) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -49,6 +49,13 @@ ActiveRecord::Schema[8.0].define(version: 2025_02_19_082222) do
     t.index ["deed_id"], name: "index_chat_rooms_on_deed_id"
   end
 
+  create_table "conversations", force: :cascade do |t|
+    t.integer "sender_id"
+    t.integer "receiver_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
   create_table "deed_completions", force: :cascade do |t|
     t.integer "deed_id", null: false
     t.integer "user_id", null: false
@@ -79,6 +86,16 @@ ActiveRecord::Schema[8.0].define(version: 2025_02_19_082222) do
     t.string "address"
   end
 
+  create_table "messages", force: :cascade do |t|
+    t.bigint "chat_room_id", null: false
+    t.bigint "user_id", null: false
+    t.text "content"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["chat_room_id"], name: "index_messages_on_chat_room_id"
+    t.index ["user_id"], name: "index_messages_on_user_id"
+  end
+
   create_table "users", force: :cascade do |t|
     t.string "first_name"
     t.string "last_name"
@@ -94,4 +111,6 @@ ActiveRecord::Schema[8.0].define(version: 2025_02_19_082222) do
   add_foreign_key "chat_rooms", "deeds"
   add_foreign_key "deed_completions", "deeds"
   add_foreign_key "deed_completions", "users"
+  add_foreign_key "messages", "chat_rooms"
+  add_foreign_key "messages", "users"
 end

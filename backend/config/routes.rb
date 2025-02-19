@@ -26,7 +26,9 @@ Rails.application.routes.draw do
     end
   end
 
-  # resources :chat_rooms, only: [:create, :show]
+  resources :chat_rooms, only: [:create, :show] do
+    resources :messages, only: [:create]
+  end
 
   # Authentication
   post '/login', to: 'users#login'

@@ -35,7 +35,7 @@ const AppRouter = () => {
           <>
             <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/maps" element={<MapsPage />} />
-            <Route path="/chat/:requesterId/:volunteerId" element={<ChatPage />} />
+            <Route path="/chat" element={<ChatPage />} />
             <Route path="*" element={<Navigate to="/dashboard" />} />
             
           </>

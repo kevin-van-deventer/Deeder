@@ -1,5 +1,6 @@
 {
   "dependencies": {
+    "@hotwired/turbo-rails": "^8.0.12",
     "@rails/actioncable": "^8.0.100"
   },
   "name": "backend",
