@@ -1,5 +1,7 @@
 class ApplicationController < ActionController::API
     before_action :authenticate_user
+
+    attr_reader :current_user
     
         def authenticate_user
             header = request.headers['Authorization']
