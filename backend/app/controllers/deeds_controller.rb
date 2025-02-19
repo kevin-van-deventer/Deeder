@@ -16,6 +16,7 @@ class DeedsController < ApplicationController
     
       render json: deeds.map { |deed| 
       deed.as_json(only: [:id, :description, :deed_type, :latitude, :longitude, :status, :address, :created_at]).merge(
+        requester_id: deed.requester_id,
         volunteer_count: deed.volunteers.count,
         volunteers: deed.volunteers.as_json(only: [:id, :first_name, :last_name]),
         completed_by: deed.completed_by.as_json(only: [:id, :first_name, :last_name]),
@@ -29,6 +30,7 @@ class DeedsController < ApplicationController
     
       render json: deed.as_json(only: [:id, :description, :deed_type, :latitude, :longitude, :status, :created_at, :address])
                       .merge(
+                        requester_id: deed.requester_id,
                         volunteer_count: deed.volunteers.count,
                         volunteers: deed.volunteers.as_json(only: [:id, :first_name, :last_name]),
                         completed_by: deed.completed_by&.as_json(only: [:id, :first_name, :last_name]),
@@ -87,6 +89,14 @@ class DeedsController < ApplicationController
 
         # Add the user to the volunteers list
         deed.volunteers << @current_user
+
+        # ActionCable.server.broadcast("deeds_channel", {
+        #   message: "#{@current_user.first_name} volunteered for a deed!",
+        #   deed_id: deed.id,
+        #   volunteer_count: deed.volunteers.count,
+        #   volunteers: deed.volunteers.as_json(only: [:id, :first_name, :last_name])
+        # })
+
         render json: { message: 'You have volunteered for this deed', deed: deed }, status: :ok
     end
   
@@ -99,7 +109,7 @@ class DeedsController < ApplicationController
       render json: deeds.map { |deed|
         deed.as_json(only: [:id, :description, :deed_type, :latitude, :longitude, :status, :address, :created_at, :completed_by_id]).merge(
           requester: deed.requester.as_json(only: [:id, :first_name, :last_name]),
-          completed_by: deed.completed_by.as_json(only: [:id, :first_name, :last_name])
+          completed_by: deed.completed_by&.as_json(only: [:id, :first_name, :last_name])
         )
       }
     end

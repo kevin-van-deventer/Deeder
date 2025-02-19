@@ -1,0 +1,14 @@
+# class ChatRoomChannel < ApplicationCable::Channel
+#     def subscribed
+#       @chat_room = ChatRoom.find(params[:id])
+#       if @chat_room.participants.include?(current_user)
+#         stream_for @chat_room
+#       else
+#         reject
+#       end
+#     end
+  
+#     def receive(data)
+#       @chat_room.messages.create!(content: data['message'], user: current_user)
+#     end
+#   end

@@ -51,7 +51,7 @@ const Dashboard = () => {
     deedsChannel.unsubscribe();
   };
 
-  }, [token]);
+}, [token]);
 
   // fetch user details from api
   const fetchUserDetails = async (userId) => {
@@ -130,6 +130,11 @@ const Dashboard = () => {
 
       
       setDeeds(response.data);
+      const volunteeredResponse = await axios.get(`http://localhost:3000/users/${userId}/volunteered_deeds`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+  
+      setVolunteeredDeeds(volunteeredResponse.data);
     } catch (error) {
       console.error("Error fetching deeds:", error);
     }
@@ -164,6 +169,10 @@ const Dashboard = () => {
 
   // Handle submitting a new deed request
   const handleSubmitDeed = async () => {
+    const token = localStorage.getItem("token");
+    const decodedToken = jwtDecode(token);
+    const userId = decodedToken.user_id;
+    
     if (!deedData.description || !deedData.deed_type) {
       alert("Please fill all fields");
       return;
@@ -185,6 +194,7 @@ const Dashboard = () => {
             latitude: deedData.latitude,
             longitude: deedData.longitude,
             address: deedData.address, // Include address
+            requester_id: userId,
           },
         },
         {
@@ -419,6 +429,9 @@ const Dashboard = () => {
                       Mark as Completed
                     </button>
                   )}
+                    <button className="chat-button" onClick={() => navigate(`/chat/${deed.id}`)}>
+                      Chat
+                    </button>
 
                   {/* <button className="complete-button" onClick={() => handleCompleteDeed(deed.id)}>Mark as Completed</button> */}
                 </li>

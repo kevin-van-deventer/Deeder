@@ -4,7 +4,7 @@ module ApplicationCable
   
       def connect
         self.current_user = find_verified_user
-        logger.add_tags "ActionCable", current_user.id
+        # logger.add_tags "ActionCable", current_user.id
       end
   
       private
@@ -16,8 +16,11 @@ module ApplicationCable
           begin
             decoded_token = JWT.decode(token, Rails.application.secret_key_base, true, algorithm: 'HS256')[0]
             user = User.find_by(id: decoded_token["user_id"])
+            if verified_user = User.find_by(id: user_id)
+              return verified_user
+            end
   
-            return user if user.present?
+            # return user if user.present?
           rescue JWT::DecodeError
             Rails.logger.warn "Invalid JWT Token: Connection rejected"
           end
