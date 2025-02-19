@@ -134,10 +134,10 @@ const ChatPage = () => {
         <h2>Chat Window</h2>
         {chatRoom ? (
           <div>
-            <h3>Chat with {selectedChatUser?.first_name}</h3>
+            <h3 style={{ color: "black" }}>Chat with {selectedChatUser?.first_name}</h3>
             <div className="chat-box">
               {messages.map((msg, index) => (
-                <p key={index} className={msg.sender_id === user.id ? "outgoing" : "incoming"}>
+                <p style={{ color: "black" }} key={index} className={msg.sender_id === user.id ? "outgoing" : "incoming"}>
                   {msg.content}
                 </p>
               ))}
