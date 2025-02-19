@@ -172,7 +172,7 @@ const Dashboard = () => {
     const token = localStorage.getItem("token");
     const decodedToken = jwtDecode(token);
     const userId = decodedToken.user_id;
-    
+
     if (!deedData.description || !deedData.deed_type) {
       alert("Please fill all fields");
       return;
@@ -278,6 +278,24 @@ const Dashboard = () => {
     } catch (error) {
       console.error("Error reposting deed:", error);
       alert(error.response?.data?.error || "Failed to repost deed.");
+    }
+  };
+
+  const handleStartChat = async (deed) => {
+    try {
+      const response = await axios.post(
+        `http://localhost:3000/chat_rooms`,
+        { deed_id: deed.id },
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+
+      const chatRoom = response.data.chat_room;
+      if (chatRoom) {
+        navigate(`/chat/${deed.requester_id}/${user.id}`); // ✅ Navigate to chat page
+      }
+    } catch (error) {
+      console.error("Error starting chat:", error);
+      alert("Failed to start chat.");
     }
   };
 
@@ -429,9 +447,8 @@ const Dashboard = () => {
                       Mark as Completed
                     </button>
                   )}
-                    <button className="chat-button" onClick={() => navigate(`/chat/${deed.id}`)}>
-                      Chat
-                    </button>
+                  {/* ✅ Show Chat button only if user is a volunteer */}
+                  <button className="chat-button" onClick={() => handleStartChat(deed)}>Chat</button>
 
                   {/* <button className="complete-button" onClick={() => handleCompleteDeed(deed.id)}>Mark as Completed</button> */}
                 </li>

@@ -6,11 +6,11 @@ class DeedsController < ApplicationController
     def index
       if params[:user_id] # Check if fetching deeds for a specific user
         user = User.find(params[:user_id])
-        deeds = user.requested_deeds.includes(:volunteers, :completed_by)
+        deeds = user.requested_deeds.includes(:volunteers, :completed_by, :chat_room)
         # deeds = user.requested_deeds + user.volunteered_deeds
         # render json: deeds
       else
-        deeds = Deed.includes(:volunteers).where("status = ? AND created_at >= ?", "unfulfilled", 24.hours.ago) # Default: only unfulfilled deeds
+        deeds = Deed.includes(:completed_by).where("status = ? AND created_at >= ?", "unfulfilled", 24.hours.ago) # Default: only unfulfilled deeds
         # deeds = Deed.includes(:volunteers).where(status: 'unfulfilled') # Default: only unfulfilled deeds
       end
     
@@ -18,6 +18,7 @@ class DeedsController < ApplicationController
       deed.as_json(only: [:id, :description, :deed_type, :latitude, :longitude, :status, :address, :created_at]).merge(
         requester_id: deed.requester_id,
         volunteer_count: deed.volunteers.count,
+        chat_room_id: deed.chat_room&.id,
         volunteers: deed.volunteers.as_json(only: [:id, :first_name, :last_name]),
         completed_by: deed.completed_by.as_json(only: [:id, :first_name, :last_name]),
         completion_status: deed.completion_status

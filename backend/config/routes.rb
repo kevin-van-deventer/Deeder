@@ -14,7 +14,7 @@ Rails.application.routes.draw do
   #     post 'complete'
   #   end
   # end
-
+  
   # Routes for deeds that aren't tied to a specific user
   # General Deed Routes
   resources :deeds, only: [:index, :create, :show, :destroy] do
@@ -25,6 +25,8 @@ Rails.application.routes.draw do
       # post: 'confirm_completion'
     end
   end
+
+  # resources :chat_rooms, only: [:create, :show]
 
   # Authentication
   post '/login', to: 'users#login'

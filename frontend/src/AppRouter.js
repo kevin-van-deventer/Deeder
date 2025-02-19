@@ -6,6 +6,8 @@ import LoginPage from "./pages/LoginPage";
 import SignupPage from "./pages/SignupPage";
 import Dashboard from "./pages/Dashboard";
 import MapsPage from "./pages/MapsPage";
+import ChatPage from "./pages/ChatPage";
+
 
 // Components
 import Navbar from "./components/NavBar";
@@ -33,6 +35,7 @@ const AppRouter = () => {
           <>
             <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/maps" element={<MapsPage />} />
+            <Route path="/chat/:requesterId/:volunteerId" element={<ChatPage />} />
             <Route path="*" element={<Navigate to="/dashboard" />} />
             
           </>

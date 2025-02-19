@@ -24,6 +24,8 @@ class Deed < ApplicationRecord
 
     has_many :deed_volunteers
     has_many :volunteers, through: :deed_volunteers, source: :user
+
+    has_one :chat_room, dependent: :destroy
   
     validates :description, presence: true, length: { maximum: 300 }
     validates :deed_type, inclusion: { in: ["one-time", "material"] }

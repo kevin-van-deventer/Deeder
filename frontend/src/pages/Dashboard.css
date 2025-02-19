@@ -224,6 +224,17 @@ p {
   transition: 0.25s;
 }
 
+.chat-button {
+  background: rgba(24, 24, 24, 0.7);
+  color: white;
+  border: none;
+  padding: 10px;
+  margin-top: 10px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: 0.25s;
+}
+
 .repost-button {
   background: rgba(255, 140, 0, 0.7);
   color: white;

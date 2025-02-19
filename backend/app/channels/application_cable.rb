@@ -14,15 +14,15 @@ module ApplicationCable
   
         if token.present?
           begin
-            decoded_token = JWT.decode(token, Rails.application.secret_key_base, true, algorithm: 'HS256')[0]
-            user = User.find_by(id: decoded_token["user_id"])
+            decoded_token = JWT.decode(token, Rails.application.secrets.secret_key_base, true, algorithm: 'HS256')
+          user_id = decoded_token[0]["user_id"]
             if verified_user = User.find_by(id: user_id)
               return verified_user
             end
   
             # return user if user.present?
           rescue JWT::DecodeError
-            Rails.logger.warn "Invalid JWT Token: Connection rejected"
+            reject_unauthorized_connection
           end
         end
   

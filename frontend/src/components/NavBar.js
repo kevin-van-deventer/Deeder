@@ -37,6 +37,9 @@ const Navbar = () => {
           <Link to="/maps" className="nav-link">Map</Link>
         </li>
         <li>
+          <Link to="/chat" className="nav-link">Chat</Link>
+        </li>
+        <li>
           {isLoggedIn ? (
             <button onClick={handleLogout} className="nav-button">Logout</button>
           ) : (
