@@ -8,8 +8,10 @@ class Message < ApplicationRecord
   private
 
   def broadcast_message
+    return unless content.present?
     ChatRoomChannel.broadcast_to(chat_room, {
-      message: render_message
+      sender_id: user.id,
+      content: content
     })
   end
 

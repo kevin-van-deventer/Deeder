@@ -12,6 +12,7 @@ const ChatPage = () => {
   const [messages, setMessages] = useState([]);
   const [messageContent, setMessageContent] = useState("");
   const [selectedChatUser, setSelectedChatUser] = useState(null);
+  const [subscription, setSubscription] = useState(null);
 
   const token = localStorage.getItem("token");
 
@@ -22,6 +23,16 @@ const ChatPage = () => {
       fetchDeeds(decodedToken.user_id);
     }
   }, [token]);
+
+  // clean up subscription on unmount
+  useEffect(() => {
+    return () => {
+      if (subscription) {
+        subscription.unsubscribe();
+      }
+    };
+  }, [subscription]);
+
 
   // Fetch logged-in user details
   const fetchUserDetails = async (userId) => {
@@ -68,7 +79,7 @@ const ChatPage = () => {
   
       // Setup WebSocket connection for real-time messages
       const cable = createConsumer("ws://localhost:3000/cable");
-      cable.subscriptions.create(
+      const chatSubscription = cable.subscriptions.create(
         { channel: "ChatRoomChannel", id: response.data.chat_room.id },
         {
           received: (newMessage) => {
@@ -76,6 +87,10 @@ const ChatPage = () => {
           },
         }
       );
+      // Save subscription reference for cleanup
+    return () => {
+      chatSubscription.unsubscribe();
+    };
     } catch (error) {
       console.error("Error starting chat:", error);
       alert("Failed to start chat.");
@@ -86,6 +101,15 @@ const ChatPage = () => {
   // Send a message
   const handleSendMessage = async () => {
     if (!messageContent.trim() || !chatRoom) return;
+
+    const newMessage = {
+      sender_id: user.id,
+      content: messageContent,
+    };
+
+    // Optimistically update UI before sending request
+  setMessages((prevMessages) => [...prevMessages, newMessage]);
+  setMessageContent(""); // Clear input field
     
     try {
       await axios.post(
@@ -93,8 +117,8 @@ const ChatPage = () => {
         { content: messageContent },
         { headers: { Authorization: `Bearer ${token}` } }
       );
-
-      setMessageContent(""); // Clear input after sending
+      // setMessages((prevMessages) => [...prevMessages, response.data]);
+      // setMessageContent(""); // Clear input after sending
     } catch (error) {
       console.error("Error sending message:", error);
       alert("Failed to send message.");
