@@ -3,7 +3,7 @@
 **Project Overview**
 Deeder is a community-driven platform where users can request help (deeds) and volunteers can step in to assist. Each request requires at least five volunteers to confirm the completion before it is marked as fulfilled. Requesters can confirm each request before or automatically after 5 volunteers have completed the deed request. The platform is designed to help communities come together to help each other in times of need.
 
-+.00+.## User Interactions
+## User Interactions
 
 ### Sign Up and Register
 
