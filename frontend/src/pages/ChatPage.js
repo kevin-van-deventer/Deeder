@@ -190,11 +190,17 @@ const ChatPage = () => {
           <div>
             <h3 style={{ color: "black" }}>Chat with {selectedChatUser?.first_name}</h3>
             <div className="chat-box">
-              {messages.map((msg, index) => (
-                <p style={{ color: "black" }} key={index} className={msg.sender_id === user.id ? "outgoing" : "incoming"}>
-                  {msg.content}
-                </p>
-              ))}
+            {messages
+            .filter((msg, index, arr) => 
+              msg?.content && msg.content.trim() && // Remove undefined, null, and blank messages
+              (index === 0 || msg.content !== arr[index - 1]?.content) // Remove consecutive duplicates
+            )
+            .map((msg, index) => (
+              <p style={{ color: "black" }} key={index} className={msg.sender_id === user.id ? "outgoing" : "incoming"}>
+                {msg.content}
+              </p>
+            ))}
+
             </div>
             <div className="chat-input">
               <input

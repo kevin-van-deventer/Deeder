@@ -1,4 +1,18 @@
 /* Ensure Maps Page covers full viewport */
+
+body:not(.maps-page) {
+  /* background: url("../public/background2.jpg"); */
+  background-color: rgb(44 43 44);
+  background-size: cover;
+  background-repeat: no-repeat;
+  width: 100%;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow-x: hidden;
+}
+
 .maps-page {
   position: absolute;
   top: 0;
@@ -26,6 +40,7 @@
 }
 
 /* Latest Deeds Section - Positioned Right (30%) */
+
 .maps-page .deeds-list {
   width: 30%;
   height: 100vh;
