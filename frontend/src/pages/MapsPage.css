@@ -163,8 +163,10 @@ body:not(.maps-page) {
     width: 100%;
     height: auto;
     border-left: none;
-    border-top: 2px solid rgba(255, 255, 255, 0.3);
+    border-top: 2px solid #32cdd5;
+    background-color: rgb(34 36 36);
   }
+
   .maps-page .deeds-list h2 {
     font-size: 20px;
     margin-bottom: 10px;

@@ -189,7 +189,7 @@ const ChatPage = () => {
         <h2>Chat Window</h2>
         {chatRoom ? (
           <div>
-            <h3 style={{ color: "black" }}>Discuss The Deed Details:</h3>
+            {/* <h3 style={{ color: "black" }}>Discuss The Deed Details:</h3> */}
             <div className="chat-box">
             {messages
             .filter((msg, index, arr) => 
@@ -197,7 +197,7 @@ const ChatPage = () => {
               (index === 0 || msg.content !== arr[index - 1]?.content) // Remove consecutive duplicates
             )
             .map((msg, index) => (
-              <p style={{ color: "black" }} key={index} className={msg.sender_id === user.id ? "outgoing" : "incoming"}>
+              <p key={index} className={msg.sender_id === user.id ? "outgoing" : "incoming"}>
                 {msg.content}
               </p>
             ))}

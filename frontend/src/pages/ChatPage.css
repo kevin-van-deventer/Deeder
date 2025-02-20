@@ -125,7 +125,7 @@ h2 {
 
 .chat-column {
   width: 70%;
-  background: #ffffff;
+  background: #ffffff00;
   padding: 15px;
   border-radius: 8px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
@@ -137,10 +137,18 @@ h2 {
 .chat-box {
   height: 400px;
   overflow-y: auto;
-  border: 1px solid #ccc;
+  /* border: 1px solid #ccc; */
   padding: 15px;
-  background: #f4f4f4;
+  background: #f4f4f400;
   border-radius: 8px;
+  overflow-y: auto; /* Enable vertical scrolling */
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none;
+}
+
+.chat-box p {
+  color: black;
+  background-color: #ffffff;
 }
 
 @media (max-width: 768px) {

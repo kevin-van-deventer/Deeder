@@ -6,7 +6,6 @@ import Navbar from "../components/NavBar";
 import "./Dashboard.css"; // Import the new CSS file
 import { createConsumer } from "@rails/actioncable";
 
-
 const Dashboard = () => {
   const navigate = useNavigate();
   const [user, setUser] = useState(null);
@@ -322,7 +321,6 @@ const Dashboard = () => {
             ) : (
               <button className="edit-button" onClick={() => setIsEditing(true)}>Update Details</button>
             )}
-            
           </div>
         )}
   
@@ -332,7 +330,8 @@ const Dashboard = () => {
           <p>Unfulfilled: <strong className="statCount">{unfulfilledDeeds}</strong></p>
           <p>Fulfilled: <strong className="statCount">{fulfilledDeeds}</strong></p>
           <p>Deeds Fulfilled: <strong className="statCount">{deedsFulfilledForOthers}</strong></p>
-          <p>Volunteered: <strong className="statCount">{completedVolunteeredDeeds.length}</strong></p>
+          <p>Volunteered: <strong className="statCount">{volunteeredDeeds.length}</strong></p>
+          <p>Volunteered Complete: <strong className="statCount">{completedVolunteeredDeeds.length}</strong></p>
         </div>
       </div>
   
@@ -345,7 +344,6 @@ const Dashboard = () => {
             <div className="deed-card" key={deed.id}>
               <p className="deedTitle">{deed.description} - {deed.deed_type}</p>
               <p>Status: <strong>{deed.completion_status}</strong></p>
-
               {/* Show Volunteers */}
               <h3><strong>Volunteers:</strong></h3>
               {deed.volunteers && deed.volunteers.length > 0 ? (
@@ -359,7 +357,6 @@ const Dashboard = () => {
               ) : (
                 <p>No volunteers yet.</p>
               )}
-
               {/* Show Repost Button Only for Expired Deeds */}
               {isExpired && deed.status === "unfulfilled" ? (
                 <button className="repost-button" onClick={() => handleRepostDeed(deed.id)}>
@@ -408,7 +405,6 @@ const Dashboard = () => {
                 </div>
               </div>
             )}
-          {/* </div> */}
         </div>
 
         {/* volunteered deeds */}
