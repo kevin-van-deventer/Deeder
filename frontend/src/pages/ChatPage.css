@@ -1,3 +1,15 @@
+body {
+  background-color: rgb(44 43 44);
+  background-size: cover;
+  background-repeat: no-repeat;
+  width: 100%;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow-x: hidden;
+}
+
 .chat-container {
   display: flex;
   gap: 20px;
@@ -9,7 +21,7 @@
 /* Left Column (30%) - Volunteers */
 .volunteer-column {
   width: 30%;
-  background: #f8f9fa;
+  background: #131314;
   padding: 15px;
   border-radius: 8px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
@@ -21,8 +33,8 @@ h2 {
   text-align: center;
 }
 
-.deed-card {
-  background: #ffffff;
+.user-card {
+  background: #2e2c2c;
   padding: 10px;
   border-radius: 8px;
   margin-bottom: 15px;
@@ -40,7 +52,7 @@ h2 {
   margin-top: 5px;
   border-radius: 5px;
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
   align-items: center;
 }
 

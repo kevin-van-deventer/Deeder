@@ -133,22 +133,22 @@ const ChatPage = () => {
     <div className="chat-container">
       {/* Left Column - List of Volunteers */}
       <div className="volunteer-column">
-        <h2>My Volunteers</h2>
+        <h2>Deeds</h2>
         {deeds.length > 0 ? (
           deeds.map((deed) => (
-            <div key={deed.id} className="deed-card">
+            <div key={deed.id} className="user-card">
               <h3>{deed.description}</h3>
               {/* List of Volunteers */}
               {deed.volunteers.length > 0 ? (
                 <div className="volunteer-list">
                   {deed.volunteers.map((volunteer) => (
                     <div key={volunteer.id} className="volunteer-item">
-                      <p>{volunteer.first_name} {volunteer.last_name}</p>
+                      {/* <p>{volunteer.first_name} {volunteer.last_name}</p> */}
                       <button
                         className="chat-button"
                         onClick={() => handleStartChat(deed, deed.volunteers[0])}
                       >
-                        Chat with {volunteer.first_name}
+                        Chat Now
                       </button>
                     </div>
                   ))}
@@ -159,8 +159,9 @@ const ChatPage = () => {
             </div>
           ))
         ) : (
-          <p>No deeds found.</p>
+          <p>No deeders yet.</p>
         )}
+        <h2>Deeders</h2>
         {volunteeredDeeds.length > 0 ? (
           volunteeredDeeds.map((deed) => (
             <div key={deed.id} className="deed-card">
@@ -172,14 +173,14 @@ const ChatPage = () => {
                         className="chat-button"
                         onClick={() => handleStartChat(deed, user)}
                       >
-                        Chat
+                        Chat Now
                       </button>
                     </div>
                 </div>
             </div>
           ))
         ) : (
-          <p>No deeds found.</p>
+          <p>No deeders found.</p>
         )}
       </div>
 
@@ -188,7 +189,7 @@ const ChatPage = () => {
         <h2>Chat Window</h2>
         {chatRoom ? (
           <div>
-            <h3 style={{ color: "black" }}>Chat with {selectedChatUser?.first_name}</h3>
+            <h3 style={{ color: "black" }}>Discuss The Deed Details:</h3>
             <div className="chat-box">
             {messages
             .filter((msg, index, arr) => 
