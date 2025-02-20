@@ -44,7 +44,7 @@ const AppRouter = () => {
             <Route path="/login" element={<LoginPage setUser={setUser} />} />
             <Route path="/signup" element={<SignupPage setUser={setUser} />} />
             {/* fallback route if user not logged in */}
-            <Route path="*" element={<Navigate to="/login" />} />
+            {/* <Route path="*" element={<Navigate to="/login" />} /> */}
           </>
         )}
         <Route

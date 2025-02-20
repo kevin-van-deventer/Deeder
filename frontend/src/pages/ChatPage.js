@@ -137,7 +137,7 @@ const ChatPage = () => {
         {deeds.length > 0 ? (
           deeds.map((deed) => (
             <div key={deed.id} className="user-card">
-              <h3>{deed.description}</h3>
+              <h4 className="user-list-descrip" >{deed.description}</h4>
               {/* List of Volunteers */}
               {deed.volunteers.length > 0 ? (
                 <div className="volunteer-list">
@@ -165,7 +165,7 @@ const ChatPage = () => {
         {volunteeredDeeds.length > 0 ? (
           volunteeredDeeds.map((deed) => (
             <div key={deed.id} className="deed-card">
-              <h3>{deed.description}</h3>
+              <h4 className="user-list-descrip" >{deed.description}</h4>
               {/* List of Volunteers */}
                 <div className="volunteer-list">
                     <div key={deed.id} className="volunteer-item">
