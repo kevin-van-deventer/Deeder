@@ -1,5 +1,5 @@
 class ChatRoomsController < ApplicationController
-  # before_action :authenticate_user
+  before_action :authenticate_user
   before_action :set_chat_room, only: [:show]
 
   def show

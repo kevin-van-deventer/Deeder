@@ -15,7 +15,7 @@ class MessagesController < ApplicationController
       if message.save
         # Broadcast the message to the channel
       ChatRoomChannel.broadcast_to(chat_room, {
-        # message: @message.content,
+        # content: @message.content,
         sender_id: message.user_id,
         created_at: message.created_at
       })
