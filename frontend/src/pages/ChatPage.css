@@ -18,7 +18,52 @@ body {
   padding: 20px;
 }
 
-/* Left Column (30%) - Volunteers */
+.chat-input {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 15px;
+  padding: 10px;
+  background: #f8f9fa;
+  border-radius: 8px;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+.chat-input input {
+  flex-grow: 1;
+  padding: 12px;
+  font-size: 16px;
+  border: 2px solid #ccc;
+  border-radius: 8px;
+  outline: none;
+  transition: all 0.3s ease-in-out;
+}
+
+.chat-input input:focus {
+  border-color: #06c1ce;
+  box-shadow: 0px 0px 8px rgba(6, 193, 206, 0.6);
+}
+
+.chat-input button {
+  padding: 12px 20px;
+  font-size: 16px;
+  font-weight: bold;
+  background-color: #06c1ce;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.3s, transform 0.2s;
+}
+
+.chat-input button:hover {
+  background-color: #048ba8;
+}
+
+.chat-input button:active {
+  transform: scale(0.95);
+}
+
 .volunteer-column {
   width: 30%;
   background: #131314;
@@ -56,7 +101,6 @@ h2 {
   align-items: center;
 }
 
-/* Chat Button */
 .chat-button {
   background: #06c1ce;
   color: white;
@@ -71,7 +115,6 @@ h2 {
   background: #048ba8;
 }
 
-/* Right Column (70%) - Chat Messages */
 .chat-column {
   width: 70%;
   background: #ffffff;
@@ -90,4 +133,16 @@ h2 {
   padding: 15px;
   background: #f4f4f4;
   border-radius: 8px;
+}
+
+@media (max-width: 768px) {
+  .chat-container {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .volunteer-column,
+  .chat-column {
+    width: 100%;
+  }
 }
