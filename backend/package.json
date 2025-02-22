@@ -1,7 +1,8 @@
 {
   "dependencies": {
     "@hotwired/turbo-rails": "^8.0.12",
-    "@rails/actioncable": "^8.0.100"
+    "@rails/actioncable": "^8.0.100",
+    "cors": "^2.8.5"
   },
   "name": "backend",
   "version": "1.0.0",
