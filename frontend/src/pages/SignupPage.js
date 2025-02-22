@@ -24,9 +24,10 @@ const SignupPage = ({ setUser }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post(`${API_URL}/users`, {
+      const response = await axios.post(`${API_URL}users`, {
         user: formData,
-      },{
+      }
+        , {
         headers: {
           "Content-Type": "application/json",
           "Access-Control-Allow-Origin": "https://deeder.vercel.app", // Allow frontend origin
