@@ -23,7 +23,7 @@ const SignupPage = ({ setUser }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post(`${API_URL}/users`, {
+      const response = await axios.post(`https://young-dusk-69972-fa429cadde5b.herokuapp.com/users`, {
         user: formData,
       });
       localStorage.setItem("token", response.data.token);
