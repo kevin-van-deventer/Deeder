@@ -1,8 +1,0 @@
-{
-  "rewrites": [
-    {
-      "source": "/:path*",
-      "destination": "https://young-dusk-69972-fa429cadde5b.herokuapp.com/:path*"
-    }
-  ]
-}
