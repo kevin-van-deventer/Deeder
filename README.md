@@ -94,3 +94,6 @@ We welcome contributions to improve Deeder. Please follow the standard GitHub wo
 ## License
 
 This project is licensed under the MIT License. See the [LICENSE](./LICENSE) file for details.
+
+development - bbdd380858d4f71b818425f3c8b71bd7
+production - 97ac99d975ac50b87850bfd54a5e4e7e
