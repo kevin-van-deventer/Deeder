@@ -83,6 +83,7 @@ Rails.application.configure do
   config.hosts = [
     "young-dusk-69972-fa429cadde5b.herokuapp.com", # Your backend domain
     "deeder.vercel.app" # Your frontend domain
+    # skdnvknsdck
   ]
   #
   # Skip DNS rebinding protection for the default health check endpoint.
