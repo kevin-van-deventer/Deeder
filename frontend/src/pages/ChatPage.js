@@ -4,6 +4,9 @@ import { jwtDecode } from "jwt-decode";
 import { createConsumer } from "@rails/actioncable";
 import "./ChatPage.css"; 
 
+const API_URL = process.env.REACT_APP_API_URL || "http://localhost:3000";
+const WS_URL = process.env.REACT_APP_WS_URL || "ws://localhost:3000/cable";
+
 const ChatPage = () => {
   const [user, setUser] = useState(null);
   const [deeds, setDeeds] = useState([]);
@@ -38,7 +41,8 @@ const ChatPage = () => {
   const fetchUserDetails = async (userId) => {
     if (!userId) return;
     try {
-      const response = await axios.get(`http://localhost:3000/users/${userId}`, {
+      // const response = await axios.get(`http://localhost:3000/users/${userId}`, {
+        const response = await axios.get(`${API_URL}/users/${userId}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       setUser(response.data);
@@ -50,11 +54,11 @@ const ChatPage = () => {
   // Fetch deeds created by logged-in user
   const fetchDeeds = async (userId) => {
     try {
-      const response = await axios.get(`http://localhost:3000/users/${userId}/deeds`, {
+      const response = await axios.get(`${API_URL}/users/${userId}/deeds`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       setDeeds(response.data);
-      const volunteeredResponse = await axios.get(`http://localhost:3000/users/${userId}/volunteered_deeds`, {
+      const volunteeredResponse = await axios.get(`${API_URL}/users/${userId}/volunteered_deeds`, {
         headers: { Authorization: `Bearer ${token}` },
       });
   
@@ -68,7 +72,7 @@ const ChatPage = () => {
   const handleStartChat = async (deed, volunteer) => {
     try {
       const response = await axios.post(
-        `http://localhost:3000/chat_rooms`,
+        `${API_URL}/chat_rooms`,
         { deed_id: deed.id, recipient_id: volunteer.id },
         { headers: { Authorization: `Bearer ${token}` } }
       );
@@ -77,7 +81,7 @@ const ChatPage = () => {
       setMessages(response.data.messages);
       setSelectedChatUser(volunteer);
       // Setup WebSocket connection for real-time messages
-      const cable = createConsumer(`ws://localhost:3000/cable?token=${token}`);
+      const cable = createConsumer(`${WS_URL}?token=${token}`);
       const chatSubscriptions = cable.subscriptions.create(
       
         { channel: "ChatRoomChannel", id: response.data.chat_room.id },
@@ -118,7 +122,7 @@ const ChatPage = () => {
 
     try {
       await axios.post(
-        `http://localhost:3000/chat_rooms/${chatRoom.id}/messages`,
+        `${API_URL}/chat_rooms/${chatRoom.id}/messages`,
         { content: messageContent },
         { headers: { Authorization: `Bearer ${token}` } }
       );

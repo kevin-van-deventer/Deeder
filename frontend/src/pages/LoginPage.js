@@ -2,8 +2,9 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import AuthForm from "../components/AuthForm";
-
 import "./LoginSignup.css";
+
+const API_URL = process.env.REACT_APP_API_URL || "http://localhost:3000";
 
 const LoginPage = ({ setUser }) => {
   const [formData, setFormData] = useState({
@@ -20,7 +21,7 @@ const LoginPage = ({ setUser }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post("http://localhost:3000/login", formData);
+      const response = await axios.post(`${API_URL}/login`, formData);
       localStorage.setItem("token", response.data.token);
       setUser(true);
       navigate("/dashboard");

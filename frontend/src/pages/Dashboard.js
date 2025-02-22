@@ -6,6 +6,9 @@ import Navbar from "../components/NavBar";
 import "./Dashboard.css"; // Import the new CSS file
 import { createConsumer } from "@rails/actioncable";
 
+const API_URL = process.env.REACT_APP_API_URL || "http://localhost:3000";
+const WS_URL = process.env.REACT_APP_WS_URL || "ws://localhost:3000/cable";
+
 const Dashboard = () => {
   const navigate = useNavigate();
   const [user, setUser] = useState(null);
@@ -37,7 +40,7 @@ const Dashboard = () => {
     }
 
     // Set up ActionCable to listen for deed updates
-  const cable = createConsumer("ws://localhost:3000/cable");
+  const cable = createConsumer(`${WS_URL}`);
 
   const deedsChannel = cable.subscriptions.create("DeedsChannel", {
     received: (data) => {
@@ -58,7 +61,7 @@ const Dashboard = () => {
     if (!userId) return;
 
     try {
-      const response = await axios.get(`http://localhost:3000/users/${userId}`, {
+      const response = await axios.get(`${API_URL}/users/${userId}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
 
@@ -74,7 +77,7 @@ const Dashboard = () => {
       });
 
       // Fetch volunteered deeds
-      const volunteeredResponse = await axios.get(`http://localhost:3000/users/${userId}/volunteered_deeds`, {
+      const volunteeredResponse = await axios.get(`${API_URL}/users/${userId}/volunteered_deeds`, {
         headers: { Authorization: `Bearer ${token}` },
       });
 
@@ -109,7 +112,7 @@ const Dashboard = () => {
       updateData.append("user[email]", formData.email);
       if (file) updateData.append("user[id_document]", file);
 
-      await axios.put(`http://localhost:3000/users/${user.id}`, updateData, {
+      await axios.put(`${API_URL}/users/${user.id}`, updateData, {
         headers: { Authorization: `Bearer ${token}`, "Content-Type": "multipart/form-data" },
       });
 
@@ -123,12 +126,12 @@ const Dashboard = () => {
   // Fetch deeds requested or volunteered by the user
   const fetchDeeds = async (userId) => {
     try {
-      const response = await axios.get(`http://localhost:3000/users/${userId}/deeds`, {
+      const response = await axios.get(`${API_URL}/users/${userId}/deeds`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       
       setDeeds(response.data);
-      const volunteeredResponse = await axios.get(`http://localhost:3000/users/${userId}/volunteered_deeds`, {
+      const volunteeredResponse = await axios.get(`${API_URL}/users/${userId}/volunteered_deeds`, {
         headers: { Authorization: `Bearer ${token}` },
       });
   
@@ -184,7 +187,7 @@ const Dashboard = () => {
 
     try {
       await axios.post(
-        "http://localhost:3000/deeds",
+        `${API_URL}/deeds`,
         {
           deed: {
             description: deedData.description,
@@ -217,7 +220,7 @@ const Dashboard = () => {
     if (!window.confirm("Are you sure you want to delete this deed?")) return;
   
     try {
-      await axios.delete(`http://localhost:3000/users/${user.id}/deeds/${deedId}`, {
+      await axios.delete(`${API_URL}/users/${user.id}/deeds/${deedId}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
   
@@ -234,7 +237,7 @@ const Dashboard = () => {
   
     try {
       const response = await axios.post(
-        `http://localhost:3000/deeds/${deedId}/complete`,
+        `${API_URL}/deeds/${deedId}/complete`,
         {},
         {
           headers: { Authorization: `Bearer ${token}` },
@@ -253,7 +256,7 @@ const Dashboard = () => {
   const handleConfirmCompletion = async (deedId) => {
     try {
       const response = await axios.post(
-        `http://localhost:3000/deeds/${deedId}/confirm_complete`,
+        `${API_URL}/deeds/${deedId}/confirm_complete`,
         {},
         { headers: { Authorization: `Bearer ${token}` } }
       );
@@ -268,7 +271,7 @@ const Dashboard = () => {
 
   const handleRepostDeed = async (deedId) => {
     try {
-      const response = await axios.post(`http://localhost:3000/deeds/${deedId}/repost`, {}, {
+      const response = await axios.post(`${API_URL}/deeds/${deedId}/repost`, {}, {
         headers: { Authorization: `Bearer ${token}` },
       });
       alert(response.data.message);

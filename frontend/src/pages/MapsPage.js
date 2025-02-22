@@ -8,7 +8,8 @@ import { jwtDecode } from "jwt-decode";
 import Navbar from "../components/NavBar";
 import "./MapsPage.css";
 
-
+const API_URL = process.env.REACT_APP_API_URL || "http://localhost:3000";
+// const WS_URL = process.env.REACT_APP_WS_URL || "ws://localhost:3000/cable";
 
 const mapContainerStyle = { width: "100%", height: "100vh", position: "relative" };
 const defaultCenter = { lat: -25.7479, lng: 28.2293 }; // Default center (Pretoria, South Africa)
@@ -31,7 +32,7 @@ const MapsPage = () => {
     getUserLocation(); // Get user’s live location
     const token = localStorage.getItem("token");
     // ✅ Set up WebSocket subscription once
-    const cable = createConsumer(`ws://localhost:3000/cable?token=${token}`); // Adjust URL if needed
+    const cable = createConsumer(`{WS_URL}?token=${token}`); // Adjust URL if needed
     const subscription = cable.subscriptions.create("DeedsChannel", {
       received: (data) => {
         console.log("WebSocket Update Received:", data);
@@ -48,7 +49,7 @@ const MapsPage = () => {
   // Fetch all unfulfilled deeds with lat/lon
   const fetchDeeds = async () => {
     try {
-      const response = await axios.get("http://localhost:3000/deeds");
+      const response = await axios.get(`${API_URL}/deeds`);
       setDeeds(response.data);
       setUnfulfilledDeeds(response.data.filter((deed) => deed.status === "unfulfilled").length);
     } catch (error) {
@@ -65,7 +66,7 @@ const MapsPage = () => {
 
     try {
       const response = await axios.post(
-        `http://localhost:3000/deeds/${deedId}/volunteer`,
+        `${API_URL}/deeds/${deedId}/volunteer`,
         {},
         { headers: { Authorization: `Bearer ${token}` } }
       );
