@@ -77,12 +77,12 @@ Rails.application.configure do
   config.active_record.attributes_for_inspect = [ :id ]
 
   config.action_cable.url = "wss://young-dusk-69972-fa429cadde5b.herokuapp.com/cable"
-  config.action_cable.allowed_request_origins = ["https://young-dusk-69972-fa429cadde5b.herokuapp.com", "https://deeder-3rrompyzw-fullwebdevkevs-projects.vercel.app"]
+  config.action_cable.allowed_request_origins = ["https://young-dusk-69972-fa429cadde5b.herokuapp.com", "https://deeder.vercel.app"]
 
   # Enable DNS rebinding protection and other `Host` header attacks.
   config.hosts = [
     "young-dusk-69972-fa429cadde5b.herokuapp.com", # Your backend domain
-    "deeder-3rrompyzw-fullwebdevkevs-projects.vercel.app" # Your frontend domain
+    "deeder.vercel.app" # Your frontend domain
   ]
   #
   # Skip DNS rebinding protection for the default health check endpoint.
