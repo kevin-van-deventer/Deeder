@@ -31,7 +31,7 @@ module Backend
 
     config.middleware.insert_before 0, Rack::Cors do
       allow do
-        origins 'https://deeder.vercel.app' # Replace with your Vercel frontend URL
+        origins 'https://deeder-3rrompyzw-fullwebdevkevs-projects.vercel.app' # Replace with your Vercel frontend URL
         resource '*',
           headers: :any,
           methods: [:get, :post, :put, :patch, :delete, :options, :head],
