@@ -4,7 +4,7 @@ import axios from "axios";
 
 // import components
 import AuthForm from "../components/AuthForm";
-const API_URL = process.env.REACT_APP_API_URL || "http://localhost:3000";
+const API_URL = process.env.REACT_APP_API_URL || "http://localhost:3001";
 
 const SignupPage = ({ setUser }) => {
   const [formData, setFormData] = useState({
@@ -24,9 +24,10 @@ const SignupPage = ({ setUser }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post(`${API_URL}/users`, {
+      const response = await axios.post(`${API_URL.replace(/\/$/, '')}/users`, {
         user: formData,
       });
+      console.log(`${API_URL}/users`);
       localStorage.setItem("token", response.data.token);
       setUser(true);
       navigate("/dashboard");
