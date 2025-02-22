@@ -27,7 +27,7 @@ const SignupPage = ({ setUser }) => {
       const response = await axios.post(`${API_URL.replace(/\/$/, '')}/users`, {
         user: formData,
       });
-      console.log(`${API_URL}/users`);
+      console.log(`${API_URL}users`);
       localStorage.setItem("token", response.data.token);
       setUser(true);
       navigate("/dashboard");
