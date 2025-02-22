@@ -24,8 +24,14 @@ const SignupPage = ({ setUser }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post(`${API_URL}/users`,{ withCredentials: true } , {
+      const response = await axios.post(`${API_URL}/users`, {
         user: formData,
+      },{
+        headers: {
+          "Content-Type": "application/json",
+          "Access-Control-Allow-Origin": "https://deeder.vercel.app", // Allow frontend origin
+        },
+        withCredentials: true, // Ensures cookies/tokens are sent properly
       });
       console.log(`${API_URL}users`);
       localStorage.setItem("token", response.data.token);

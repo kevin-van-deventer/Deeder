@@ -21,5 +21,9 @@ class ApplicationController < ActionController::API
             response.set_header('Access-Control-Allow-Credentials', 'true')  # If using authentication
         end
 
+        def handle_options
+            head :ok
+          end
+
     end
 end
