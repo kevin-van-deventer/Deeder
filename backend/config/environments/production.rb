@@ -55,7 +55,7 @@ Rails.application.configure do
   # config.action_mailer.raise_delivery_errors = false
 
   # Set host to be used by links generated in mailer templates.
-  config.action_mailer.default_url_options = { host: "https://young-dusk-69972-fa429cadde5b.herokuapp.com/" }
+  config.action_mailer.default_url_options = { host: "https://young-dusk-69972-fa429cadde5b.herokuapp.com" }
 
   # Specify outgoing SMTP server. Remember to add smtp/* credentials via rails credentials:edit.
   # config.action_mailer.smtp_settings = {
@@ -76,7 +76,7 @@ Rails.application.configure do
   # Only use :id for inspections in production.
   config.active_record.attributes_for_inspect = [ :id ]
 
-  config.action_cable.url = "wss://deeder.vercel.app/cable"
+  config.action_cable.url = "wss://young-dusk-69972-fa429cadde5b.herokuapp.com/cable"
   config.action_cable.allowed_request_origins = ["https://young-dusk-69972-fa429cadde5b.herokuapp.com", "http://deeder.vercel.app"]
 
   # Enable DNS rebinding protection and other `Host` header attacks.
