@@ -1,6 +1,6 @@
 class ApplicationController < ActionController::API
-    before_action :authenticate_user
     before_action :set_cors_headers
+    before_action :authenticate_user
 
     attr_reader :current_user
     
@@ -23,7 +23,12 @@ class ApplicationController < ActionController::API
 
         def handle_options
             head :ok
-          end
+        end
+
+        # Handle CORS preflight requests
+        def preflight
+            head :ok
+        end
 
     end
 end

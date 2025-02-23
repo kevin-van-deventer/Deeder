@@ -29,4 +29,7 @@ Rails.application.routes.draw do
   # Authentication
   post '/login', to: 'users#login'
 
+  # CORS preflight route
+  match '*path', to: 'application#preflight', via: [:options]
+
 end
