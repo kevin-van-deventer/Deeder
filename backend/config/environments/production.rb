@@ -76,6 +76,17 @@ Rails.application.configure do
   # Only use :id for inspections in production.
   config.active_record.attributes_for_inspect = [ :id ]
 
+  config.middleware.insert_before 0, Rack::Cors do
+      allow do
+        origins 'https://deeder.vercel.app' # Replace with your Vercel frontend URL
+        resource '*',
+          headers: :any,
+          expose: ['Authorization'],
+          methods: [:get, :post, :put, :patch, :delete, :options, :head],
+          credentials: true,
+      end
+    end
+
   config.action_cable.url = "wss://young-dusk-69972-fa429cadde5b.herokuapp.com/cable"
   config.action_cable.allowed_request_origins = ["https://young-dusk-69972-fa429cadde5b.herokuapp.com", "https://deeder.vercel.app"]
 
@@ -83,7 +94,6 @@ Rails.application.configure do
   config.hosts = [
     "young-dusk-69972-fa429cadde5b.herokuapp.com", # Your backend domain
     "deeder.vercel.app" # Your frontend domain
-    # skdnvknsdck
   ]
   #
   # Skip DNS rebinding protection for the default health check endpoint.

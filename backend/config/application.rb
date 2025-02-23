@@ -27,17 +27,19 @@ module Backend
     # Only loads a smaller set of middleware suitable for API only apps.
     # Middleware like session, flash, cookies can be added back manually.
     # Skip views, helpers and assets when generating a new resource.
-    config.api_only = true
+    # config.api_only = true
 
-    config.middleware.insert_before 0, Rack::Cors do
-      allow do
-        origins 'https://deeder.vercel.app' # Replace with your Vercel frontend URL
-        resource '*',
-          headers: :any,
-          methods: [:get, :post, :put, :patch, :delete, :options, :head],
-          credentials: true
-      end
-    end
+    # config.middleware.insert_before 0, Rack::Cors do
+    #   allow do
+    #     origins 'https://deeder.vercel.app' # Replace with your Vercel frontend URL
+    #     resource '*',
+    #       headers: :any,
+    #       expose: ['Authorization'],
+    #       methods: [:get, :post, :put, :patch, :delete, :options, :head],
+    #       credentials: true,
+    #       max_age: 86400
+    #   end
+    # end
 
   end
 end
