@@ -19,3 +19,11 @@ production:
   username: deeder_user
   password: OC0KfLAfA7wPuUrZINfrM1jwKaIg7ga0
   host: dpg-cvelt8dsvqrc73fc1g1g-a
+
+queue:
+  <<: *default
+  database: solid_queue
+  username: deeder_user
+  password: OC0KfLAfA7wPuUrZINfrM1jwKaIg7ga0
+  host: dpg-cvelt8dsvqrc73fc1g1g-a
+  migrations_paths: db/solid_queue_migrations
