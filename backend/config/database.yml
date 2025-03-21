@@ -14,4 +14,8 @@ test:
 
 production:
   <<: *default
-  url: <%= ENV['DATABASE_URL'] %>
+  url: postgresql://deeder_user:OC0KfLAfA7wPuUrZINfrM1jwKaIg7ga0@dpg-cvelt8dsvqrc73fc1g1g-a/deeder
+  database: deeder
+  username: deeder_user
+  password: OC0KfLAfA7wPuUrZINfrM1jwKaIg7ga0
+  host: dpg-cvelt8dsvqrc73fc1g1g-a
