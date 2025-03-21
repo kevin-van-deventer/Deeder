@@ -1,15 +1,25 @@
 database:
-  - name: mysite
-    databaseName: mysite
-    user: mysite
+  - name: Deeder
+    databaseName: deeder
+    user: deeder_user
     plan: free
+    region: frankfurt
+    ipAllowList:
+      - source: 0.0.0.0/0
+        description: everywhere
+    postgresMajorVersion: "16"
+version: "1"
 
 services:
   - type: keyvalue
-    name: sidekiq-keyvalue
-    region: ohio
-    maxmemoryPolicy: noeviction
-    ipAllowList: [] # only allow internal connections
+    name: Deeder
+    plan: free
+    region: frankfurt
+    maxmemoryPolicy: allkeys-lru
+    ipAllowList:
+    - source: 0.0.0.0/0
+      description: all
+    version: "1"
 
   - type: worker
     name: sidekiq-worker
@@ -27,18 +37,33 @@ services:
         sync: false
 
   - type: web
-    name: mysite
+    name: Deeder
     runtime: ruby
-    region: frankfurt
+    repo: https://github.com/kevin-van-deventer/Deeder
     plan: free
-    buildCommand: bundle install; bundle exec rake assets:precompile; bundle exec rake assets:clean;./bin/render-build.sh;
-    startCommand: bundle exec puma -t 5:5 -p ${PORT:-3000} -e ${RACK_ENV:-development}; bundle exec rails server;
     envVars:
-      - key: REDIS_URL
-        fromDatabase:
-          type: keyvalue
-          name: sidekiq-keyvalue
-          property: connectionString
-      - key: RAILS_MASTER_KEY
-        sync:false- key: WEB_CONCURRENCY
-        value: 2
+    - key: AWS_ACCESS_KEY_ID
+      sync: false
+    - key: AWS_BUCKET
+      sync: false
+    - key: AWS_REGION
+      sync: false
+    - key: AWS_SECRET_ACCESS_KEY
+      sync: false
+    - key: secrets.yml
+      sync: false
+    - key: REDIS_URL
+      sync: false
+    - key: DATABASE_URL
+      sync: false
+    - key: WEB_CONCURRENCY
+      sync: false
+    - key: RAILS_MASTER_KEY
+      sync: false
+    region: frankfurt
+    buildCommand: bundle install; bundle exec rake assets:clean; ./bin/render-build.sh;
+      ./bin/rails db:migrate
+    startCommand: bundle exec puma -t 5:5 -p ${PORT:-3000} -e ${RACK_ENV:-development};
+      ./bin/rails server
+    rootDir: ./backend
+version: "1"
