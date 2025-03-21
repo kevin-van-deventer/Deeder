@@ -1,5 +1,5 @@
-#!/usr/bin/env bash# exit on error
-set -o errexit
+#!/bin/bash
+set -o errexit  # Exit on error
 
 bundle install
 bundle exec rails assets:precompile
