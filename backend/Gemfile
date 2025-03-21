@@ -4,7 +4,7 @@ source "https://rubygems.org"
 gem "rails", "~> 8.0.1"
 # Use sqlite3 as the database for Active Record
 
-  gem 'pg'
+gem 'pg'
 
 # Use the Puma web server [https://github.com/puma/puma]
 gem "puma", ">= 5.0"
@@ -56,8 +56,8 @@ gem "jwt", "~> 2.10"
 gem "active_storage_validations", "~> 2.0"
 gem "actioncable", "~> 8.0"
 gem "redis", "~> 5.3"
-gem "dockerfile-rails", ">= 1.7", :group => :development
+# gem "dockerfile-rails", ">= 1.7", :group => :development
 gem "litestream", "~> 0.12.0"
-# gem "aws-sdk-s3", "~> 1.181", :require => false
+gem "aws-sdk-s3", "~> 1.181", :require => false
 
 gem "turbo-rails", "~> 2.0"
