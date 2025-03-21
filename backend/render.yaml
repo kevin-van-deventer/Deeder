@@ -5,17 +5,40 @@ database:
     plan: free
 
 services:
+  - type: keyvalue
+    name: sidekiq-keyvalue
+    region: ohio
+    maxmemoryPolicy: noeviction
+    ipAllowList: [] # only allow internal connections
+
+  - type: worker
+    name: sidekiq-worker
+    runtime: ruby
+    region: ohio
+    buildCommand: bundle install
+    startCommand: bundle exec sidekiq
+    envVars:
+      - key: REDIS_URL
+        fromService:
+          type: keyvalue
+          name: sidekiq-keyvalue
+          property: connectionString
+      - key: RAILS_MASTER_KEY
+        sync: false
+
   - type: web
     name: mysite
     runtime: ruby
+    region: frankfurt
     plan: free
-    buildCommand: "./bin/render-build.sh"
-    startCommand: "bundle exec rails server"
+    buildCommand: bundle install; bundle exec rake assets:precompile; bundle exec rake assets:clean;./bin/render-build.sh;
+    startCommand: bundle exec puma -t 5:5 -p ${PORT:-3000} -e ${RACK_ENV:-development}; bundle exec rails server;
     envVars:
-      - key: DATABASE_URL
+      - key: REDIS_URL
         fromDatabase:
-          name: mysite
-          property: connectString
+          type: keyvalue
+          name: sidekiq-keyvalue
+          property: connectionString
       - key: RAILS_MASTER_KEY
         sync:false- key: WEB_CONCURRENCY
         value: 2
