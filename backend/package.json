@@ -1,7 +1,10 @@
 {
   "dependencies": {
     "@hotwired/turbo-rails": "^8.0.12",
-    "@rails/actioncable": "^8.0.100"
+    "@rails/actioncable": "^8.0.100",
+    "@rails/activestorage": "^8.0.200",
+    "@rails/ujs": "^7.1.3-4",
+    "trix": "^2.1.13"
   },
   "name": "backend",
   "version": "1.0.0",
