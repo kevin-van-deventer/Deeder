@@ -5,6 +5,8 @@ class CreateDeeds < ActiveRecord::Migration[7.0]
     create_table :deeds do |t|
       t.string :description
       t.string :deed_type
+      t.float :latitude
+      t.float :longitude
       t.string :status
       t.integer :requester_id
       t.integer :completed_by_id

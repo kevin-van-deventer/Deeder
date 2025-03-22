@@ -2,10 +2,20 @@ class Deed < ApplicationRecord
     after_commit :broadcast_deeds_update, on: [:create, :update, :destroy]
 
     def broadcast_deeds_update
+      unfulfilled_deeds = Deed.where(status: "unfulfilled")
       ActionCable.server.broadcast("deeds_channel", {
-        unfulfilled_count: Deed.where(status: "unfulfilled").count,
-        deeds: Deed.where(status: "unfulfilled").as_json(only: [:id, :description, :deed_type, :status, :latitude, :longitude, :address])
+        unfulfilled_count: unfulfilled_deeds.count,
+        deeds: unfulfilled_deeds.as_json(only: [:id, :description, :deed_type, :status, :address], methods: [:latitude_float, :longitude_float])
       })
+    end
+
+    # Add these methods to convert database fields to floats explicitly
+    def latitude_float
+      latitude.to_f
+    end
+
+    def longitude_float
+      longitude.to_f
     end
     
 
