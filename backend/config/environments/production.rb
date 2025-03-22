@@ -46,8 +46,12 @@ Rails.application.configure do
   # Replace the default in-process memory cache store with a durable alternative.
   config.cache_store = :redis_cache_store, {
     url: ENV.fetch("REDIS_URL"),
-    namespace: 'cache',
-    expires_in: 1.day
+    ssl_params: { verify_mode: OpenSSL::SSL::VERIFY_NONE }, # Bypass SSL verification
+    connect_timeout: 5,     # Increase from default 1 second
+    read_timeout: 5,        # Increase from default 1 second
+    write_timeout: 5
+    # namespace: 'cache',
+    # expires_in: 1.day
   }
 
   # Replace the default in-process and non-durable queuing backend for Active Job.
