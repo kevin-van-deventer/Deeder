@@ -76,9 +76,12 @@ Rails.application.configure do
 
   config.action_cable.url = "wss://deeder-1.onrender.com/cable"
   config.action_cable.allowed_request_origins = [
-    "https://deeder.onrender.com",
+    ENV.fetch('ACTION_CABLE_ALLOWED_ORIGINS', 'http://localhost:3000').split(','),
     /ws:\/\/localhost:*/ # For local development
   ]
+
+  config.action_cable.disable_request_forgery_protection = false
+  config.action_cable.allow_same_origin_as_host = true
 
   # Enable locale fallbacks for I18n (makes lookups for any locale fall back to
   # the I18n.default_locale when a translation cannot be found).

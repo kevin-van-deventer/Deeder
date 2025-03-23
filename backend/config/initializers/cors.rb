@@ -5,12 +5,19 @@
 
 # Read more: https://github.com/cyu/rack-cors
 
-Rails.application.config.middleware.insert_before 0, Rack::Cors do
+RRails.application.config.middleware.insert_before 0, Rack::Cors do
   allow do
-    origins "*"
-
-    resource "*",
+    origins ENV.fetch('ACTION_CABLE_ALLOWED_ORIGINS', 'localhost:3000').split(',')
+    
+    resource '/cable',
       headers: :any,
-      methods: [:get, :post, :put, :patch, :delete, :options, :head]
+      methods: [:get, :post, :options],
+      credentials: true
+    
+    resource '*',
+      headers: :any,
+      methods: [:get, :post, :put, :patch, :delete, :options, :head],
+      credentials: true,
+      max_age: 600
   end
 end
