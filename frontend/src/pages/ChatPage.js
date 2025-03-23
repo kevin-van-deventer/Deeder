@@ -86,7 +86,7 @@ const ChatPage = () => {
       setSelectedChatUser(volunteer)
       // Setup WebSocket connection for real-time messages
       const cable = createConsumer(
-        `${process.env.REACT_APP_WS_BASE_URL}/cable?token=${token}`
+        `${process.env.REACT_APP_WS_BASE_URL}?token=${token}`
       )
       const chatSubscriptions = cable.subscriptions.create(
         { channel: "ChatRoomChannel", id: response.data.chat_room.id },

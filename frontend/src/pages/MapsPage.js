@@ -39,7 +39,7 @@ const MapsPage = () => {
     const token = localStorage.getItem("token")
     // ✅ Set up WebSocket subscription once
     const cable = createConsumer(
-      `${process.env.REACT_APP_WS_BASE_URL}/cable?token=${token}`
+      `${process.env.REACT_APP_WS_BASE_URL}?token=${token}`
     ) // Adjust URL if needed
     const subscription = cable.subscriptions.create("DeedsChannel", {
       received: (data) => {

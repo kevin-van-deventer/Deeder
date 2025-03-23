@@ -41,7 +41,7 @@ const Dashboard = () => {
     }
 
     // Set up ActionCable to listen for deed updates
-    const cable = createConsumer(`${process.env.REACT_APP_WS_BASE_URL}/cable`)
+    const cable = createConsumer(`${process.env.REACT_APP_WS_BASE_URL}`)
 
     const deedsChannel = cable.subscriptions.create("DeedsChannel", {
       received: (data) => {
