@@ -1,4 +1,5 @@
 Rails.application.routes.draw do
+  root to: proc { [200, {}, ['API Server'] }
   mount ActionCable.server => "/cable"
 
   # User Routes
