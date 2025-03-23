@@ -1,10 +1,10 @@
-import React from "react";
+import React from "react"
 
 // import styles
-import "./AuthForm.css";
+import "./AuthForm.css"
 
 const AuthForm = ({ formData, handleChange, handleSubmit, type }) => {
-  const isSignup = type === "signup";
+  const isSignup = type === "signup"
 
   return (
     <form className="container" onSubmit={handleSubmit}>
@@ -83,7 +83,7 @@ const AuthForm = ({ formData, handleChange, handleSubmit, type }) => {
             <h5>Remember me</h5>
           </label>
         </div>
-        <a className="forgot-password" href="#">
+        <a className="forgot-password" href="/login">
           <h5>Forgot password?</h5>
         </a>
       </section>
@@ -95,16 +95,22 @@ const AuthForm = ({ formData, handleChange, handleSubmit, type }) => {
       <h5 className="dont-have-an-account">
         {isSignup ? (
           <>
-            Already have an account? <a href="/login"><b className="forgot-password">Login</b></a>
+            Already have an account?{" "}
+            <a href="/login">
+              <b className="forgot-password">Login</b>
+            </a>
           </>
         ) : (
           <>
-            Don't have an account? <a href="/signup"><b className="forgot-password">Register</b></a>
+            Don't have an account?{" "}
+            <a href="/signup">
+              <b className="forgot-password">Register</b>
+            </a>
           </>
         )}
       </h5>
     </form>
-  );
-};
+  )
+}
 
-export default AuthForm;
+export default AuthForm
