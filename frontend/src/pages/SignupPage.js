@@ -1,10 +1,9 @@
-import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import axios from "axios";
+import React, { useState } from "react"
+import { useNavigate } from "react-router-dom"
+import axios from "axios"
 
 // import components
-import AuthForm from "../components/AuthForm";
-
+import AuthForm from "../components/AuthForm"
 
 const SignupPage = ({ setUser }) => {
   const [formData, setFormData] = useState({
@@ -13,29 +12,39 @@ const SignupPage = ({ setUser }) => {
     email: "",
     password: "",
     password_confirmation: "",
-  });
+  })
 
-  const navigate = useNavigate();
+  const navigate = useNavigate()
 
   const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
-  };
+    setFormData({ ...formData, [e.target.name]: e.target.value })
+  }
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
+    e.preventDefault()
     try {
-      const response = await axios.post("http://localhost:3000/users", {
-        user: formData,
-      });
-      localStorage.setItem("token", response.data.token);
-      setUser(true);
-      navigate("/dashboard");
+      const response = await axios.post(
+        `${process.env.REACT_APP_API_BASE_URL}/users`,
+        {
+          user: formData,
+        }
+      )
+      localStorage.setItem("token", response.data.token)
+      setUser(true)
+      navigate("/dashboard")
     } catch (error) {
-      alert("Signup failed: " + error.response.data.errors.join(", "));
+      alert("Signup failed: " + error.response.data.errors.join(", "))
     }
-  };
+  }
 
-  return <AuthForm formData={formData} handleChange={handleChange} handleSubmit={handleSubmit} type="signup" />;
-};
+  return (
+    <AuthForm
+      formData={formData}
+      handleChange={handleChange}
+      handleSubmit={handleSubmit}
+      type="signup"
+    />
+  )
+}
 
-export default SignupPage;
+export default SignupPage

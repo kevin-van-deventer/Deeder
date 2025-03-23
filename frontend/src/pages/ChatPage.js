@@ -1,133 +1,137 @@
-import React, { useEffect, useState } from "react";
-import axios from "axios";
-import { jwtDecode } from "jwt-decode";
-import { createConsumer } from "@rails/actioncable";
-import "./ChatPage.css"; 
+import React, { useEffect, useState } from "react"
+import axios from "axios"
+import { jwtDecode } from "jwt-decode"
+import { createConsumer } from "@rails/actioncable"
+import "./ChatPage.css"
 
 const ChatPage = () => {
-  const [user, setUser] = useState(null);
-  const [deeds, setDeeds] = useState([]);
-  const [volunteeredDeeds, setVolunteeredDeeds] = useState([]);
-  const [chatRoom, setChatRoom] = useState(null);
-  const [messages, setMessages] = useState([]);
-  const [messageContent, setMessageContent] = useState("");
-  const [selectedChatUser, setSelectedChatUser] = useState(null);
-  const [subscription, setSubscription] = useState(null);
+  const [user, setUser] = useState(null)
+  const [deeds, setDeeds] = useState([])
+  const [volunteeredDeeds, setVolunteeredDeeds] = useState([])
+  const [chatRoom, setChatRoom] = useState(null)
+  const [messages, setMessages] = useState([])
+  const [messageContent, setMessageContent] = useState("")
+  const [selectedChatUser, setSelectedChatUser] = useState(null)
+  const [subscription, setSubscription] = useState(null)
 
-  const token = localStorage.getItem("token");
+  const token = localStorage.getItem("token")
 
   useEffect(() => {
     if (token) {
-      const decodedToken = jwtDecode(token);
-      fetchUserDetails(decodedToken.user_id);
-      fetchDeeds(decodedToken.user_id);
+      const decodedToken = jwtDecode(token)
+      fetchUserDetails(decodedToken.user_id)
+      fetchDeeds(decodedToken.user_id)
     }
-  }, [token]);
+  }, [token])
 
   // clean up subscription on unmount
   useEffect(() => {
     return () => {
       if (subscription) {
-        subscription.unsubscribe();
+        subscription.unsubscribe()
       }
-    };
-  }, [subscription]);
-
+    }
+  }, [subscription])
 
   // Fetch logged-in user details
   const fetchUserDetails = async (userId) => {
-    if (!userId) return;
+    if (!userId) return
     try {
-      const response = await axios.get(`http://localhost:3000/users/${userId}`, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
-      setUser(response.data);
+      const response = await axios.get(
+        `${process.env.REACT_APP_API_BASE_URL}/users/${userId}`,
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      )
+      setUser(response.data)
     } catch (error) {
-      console.error("Error fetching user details:", error);
+      console.error("Error fetching user details:", error)
     }
-  };
+  }
 
   // Fetch deeds created by logged-in user
   const fetchDeeds = async (userId) => {
     try {
-      const response = await axios.get(`http://localhost:3000/users/${userId}/deeds`, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
-      setDeeds(response.data);
-      const volunteeredResponse = await axios.get(`http://localhost:3000/users/${userId}/volunteered_deeds`, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
-  
-      setVolunteeredDeeds(volunteeredResponse.data);
+      const response = await axios.get(
+        `${process.env.REACT_APP_API_BASE_URL}/users/${userId}/deeds`,
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      )
+      setDeeds(response.data)
+      const volunteeredResponse = await axios.get(
+        `${process.env.REACT_APP_API_BASE_URL}/users/${userId}/volunteered_deeds`,
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      )
+
+      setVolunteeredDeeds(volunteeredResponse.data)
     } catch (error) {
-      console.error("Error fetching deeds:", error);
+      console.error("Error fetching deeds:", error)
     }
-  };
+  }
 
   // Start chat with a volunteer
   const handleStartChat = async (deed, volunteer) => {
     try {
       const response = await axios.post(
-        `http://localhost:3000/chat_rooms`,
+        `${process.env.REACT_APP_API_BASE_URL}/chat_rooms`,
         { deed_id: deed.id, recipient_id: volunteer.id },
         { headers: { Authorization: `Bearer ${token}` } }
-      );
-  
-      setChatRoom(response.data.chat_room);
-      setMessages(response.data.messages);
-      setSelectedChatUser(volunteer);
+      )
+
+      setChatRoom(response.data.chat_room)
+      setMessages(response.data.messages)
+      setSelectedChatUser(volunteer)
       // Setup WebSocket connection for real-time messages
-      const cable = createConsumer(`ws://localhost:3000/cable?token=${token}`);
+      const cable = createConsumer(
+        `${process.env.REACT_APP_WS_BASE_URL}/cable?token=${token}`
+      )
       const chatSubscriptions = cable.subscriptions.create(
-      
         { channel: "ChatRoomChannel", id: response.data.chat_room.id },
         {
           received: (newMessage) => {
-            
-            
-            setMessages((prevMessages) => [...prevMessages, newMessage]);
-            setChatRoom(response.data.chat_room);
+            setMessages((prevMessages) => [...prevMessages, newMessage])
+            setChatRoom(response.data.chat_room)
             // const prevMessages = [...prev]
-
           },
         }
-      );
-      setSubscription(chatSubscriptions);
+      )
+      setSubscription(chatSubscriptions)
       return () => {
-        chatSubscriptions.unsubscribe(); // Cleanup WebSocket on unmount
-      };
+        chatSubscriptions.unsubscribe() // Cleanup WebSocket on unmount
+      }
     } catch (error) {
-      console.error("Error starting chat:", error);
-      alert("Failed to start chat.");
+      console.error("Error starting chat:", error)
+      alert("Failed to start chat.")
     }
-  };
-  
+  }
 
   // Send a message
   const handleSendMessage = async () => {
-    if (!messageContent.trim() || !chatRoom) return;
+    if (!messageContent.trim() || !chatRoom) return
     // console.log("send msg");
     const newMessage = {
       sender_id: user.id,
       content: messageContent,
-    };
+    }
 
     // Optimistically update UI before sending request
-  // setMessages((prevMessages) => [...prevMessages, newMessage]);
-  setMessageContent(""); // Clear input field
+    // setMessages((prevMessages) => [...prevMessages, newMessage]);
+    setMessageContent("") // Clear input field
 
     try {
       await axios.post(
-        `http://localhost:3000/chat_rooms/${chatRoom.id}/messages`,
+        `${process.env.REACT_APP_API_BASE_URL}/chat_rooms/${chatRoom.id}/messages`,
         { content: messageContent },
         { headers: { Authorization: `Bearer ${token}` } }
-      );
-      
+      )
     } catch (error) {
-      console.error("Error sending message:", error);
-      alert("Failed to send message.");
+      console.error("Error sending message:", error)
+      alert("Failed to send message.")
     }
-  };
+  }
 
   return (
     <div className="chat-container">
@@ -137,7 +141,7 @@ const ChatPage = () => {
         {deeds.length > 0 ? (
           deeds.map((deed) => (
             <div key={deed.id} className="user-card">
-              <h4 className="user-list-descrip" >{deed.description}</h4>
+              <h4 className="user-list-descrip">{deed.description}</h4>
               {/* List of Volunteers */}
               {deed.volunteers.length > 0 ? (
                 <div className="volunteer-list">
@@ -146,7 +150,9 @@ const ChatPage = () => {
                       {/* <p>{volunteer.first_name} {volunteer.last_name}</p> */}
                       <button
                         className="chat-button"
-                        onClick={() => handleStartChat(deed, deed.volunteers[0])}
+                        onClick={() =>
+                          handleStartChat(deed, deed.volunteers[0])
+                        }
                       >
                         Chat Now
                       </button>
@@ -165,18 +171,18 @@ const ChatPage = () => {
         {volunteeredDeeds.length > 0 ? (
           volunteeredDeeds.map((deed) => (
             <div key={deed.id} className="deed-card">
-              <h4 className="user-list-descrip" >{deed.description}</h4>
+              <h4 className="user-list-descrip">{deed.description}</h4>
               {/* List of Volunteers */}
-                <div className="volunteer-list">
-                    <div key={deed.id} className="volunteer-item">
-                      <button
-                        className="chat-button"
-                        onClick={() => handleStartChat(deed, user)}
-                      >
-                        Chat Now
-                      </button>
-                    </div>
+              <div className="volunteer-list">
+                <div key={deed.id} className="volunteer-item">
+                  <button
+                    className="chat-button"
+                    onClick={() => handleStartChat(deed, user)}
+                  >
+                    Chat Now
+                  </button>
                 </div>
+              </div>
             </div>
           ))
         ) : (
@@ -191,17 +197,23 @@ const ChatPage = () => {
           <div>
             {/* <h3 style={{ color: "black" }}>Discuss The Deed Details:</h3> */}
             <div className="chat-box">
-            {messages
-            .filter((msg, index, arr) => 
-              msg?.content && msg.content.trim() && // Remove undefined, null, and blank messages
-              (index === 0 || msg.content !== arr[index - 1]?.content) // Remove consecutive duplicates
-            )
-            .map((msg, index) => (
-              <p key={index} className={msg.sender_id === user.id ? "outgoing" : "incoming"}>
-                {msg.content}
-              </p>
-            ))}
-
+              {messages
+                .filter(
+                  (msg, index, arr) =>
+                    msg?.content &&
+                    msg.content.trim() && // Remove undefined, null, and blank messages
+                    (index === 0 || msg.content !== arr[index - 1]?.content) // Remove consecutive duplicates
+                )
+                .map((msg, index) => (
+                  <p
+                    key={index}
+                    className={
+                      msg.sender_id === user.id ? "outgoing" : "incoming"
+                    }
+                  >
+                    {msg.content}
+                  </p>
+                ))}
             </div>
             <div className="chat-input">
               <input
@@ -218,7 +230,7 @@ const ChatPage = () => {
         )}
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default ChatPage;
+export default ChatPage

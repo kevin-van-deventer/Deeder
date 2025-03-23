@@ -1,6 +1,8 @@
-import { createConsumer } from "@rails/actioncable";
+import { createConsumer } from "@rails/actioncable"
 
-const token = localStorage.getItem("token");
-const consumer = createConsumer(`ws://localhost:3000/cable?token=${token}`);
+const token = localStorage.getItem("token")
+const consumer = createConsumer(
+  `${process.env.REACT_APP_WS_BASE_URL}/cable?token=${token}`
+)
 
-export default consumer;
+export default consumer
