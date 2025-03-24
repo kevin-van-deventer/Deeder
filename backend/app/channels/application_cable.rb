@@ -19,11 +19,12 @@ module ApplicationCable
 
           return user if user.present?
         rescue JWT::ExpiredSignature
-          reject_unauthorized_connection("Token expired")
+          reject_unauthorized_connection
         rescue JWT::DecodeError
-          reject_unauthorized_connection("Invalid token")
+          reject_unauthorized_connection
         end
       end
+      reject_unauthorized_connection
     end
   end
 end

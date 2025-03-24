@@ -10,13 +10,13 @@ class Deed < ApplicationRecord
     end
 
     # Add these methods to convert database fields to floats explicitly
-    # def latitude_float
-    #   latitude.to_f
-    # end
+    def latitude_float
+      latitude.to_f
+    end
 
-    # def longitude_float
-    #   longitude.to_f
-    # end
+    def longitude_float
+      longitude.to_f
+    end
     
 
     before_validation :set_default_status, on: :create
