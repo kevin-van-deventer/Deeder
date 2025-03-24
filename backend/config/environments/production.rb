@@ -80,7 +80,7 @@ Rails.application.configure do
     /wss?:\/\/deeder\.onrender\.com/
   ]
   config.action_cable.redis = {
-  url: url: ENV['REDIS_URL'],
+  url: ENV['REDIS_URL'],
   ssl: false
 }
 
