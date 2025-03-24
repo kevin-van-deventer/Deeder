@@ -36,6 +36,10 @@ const AppRouter = () => {
       <Navbar />
       <Routes>
         <>
+          <Route
+            path="/"
+            element={<Navigate to={user ? "/dashboard" : "/login"} />}
+          />
           <Route path="/login" element={<LoginPage setUser={setUser} />} />
           <Route path="/signup" element={<SignupPage setUser={setUser} />} />
           <Route path="/dashboard" element={<Dashboard />} />
