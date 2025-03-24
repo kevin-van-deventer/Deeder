@@ -79,10 +79,10 @@ Rails.application.configure do
     "https://deeder-1.onrender.com",
     /wss?:\/\/deeder\.onrender\.com/
   ]
-  config.action_cable.redis = {
-  url: ENV['REDIS_URL'],
-  ssl: false
-}
+  # config.action_cable.redis = {
+  #   url: ENV['REDIS_URL'],
+  #   ssl: false
+  # }
 
   config.action_cable.disable_request_forgery_protection = false
   config.action_cable.allow_same_origin_as_host = true
