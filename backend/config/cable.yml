@@ -12,7 +12,7 @@ test:
 
 production:
   adapter: redis
-  url: <%= ENV["REDIS_URL"] %>
+  url: <%= ENV.fetch("REDIS_URL", "redis://localhost:6379/1") %>
   ssl: false # Explicitly disable SSL
   channel_prefix: deeder_production
   timeout: 5

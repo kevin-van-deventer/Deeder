@@ -25,7 +25,7 @@ Rails.application.configure do
   config.assume_ssl = true
 
   # Force all access to the app over SSL, use Strict-Transport-Security, and use secure cookies.
-  config.force_ssl = true
+  config.force_ssl = false
 
   # Skip http-to-https redirect for the default health check endpoint.
   # config.ssl_options = { redirect: { exclude: ->(request) { request.path == "/up" } } }
@@ -79,6 +79,10 @@ Rails.application.configure do
     "https://deeder-1.onrender.com",
     /wss?:\/\/deeder\.onrender\.com/
   ]
+  config.action_cable.redis = {
+  url: ENV['REDIS_URL'],
+  ssl: false
+}
 
   config.action_cable.disable_request_forgery_protection = false
   config.action_cable.allow_same_origin_as_host = true
