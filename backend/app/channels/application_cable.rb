@@ -14,16 +14,16 @@ module ApplicationCable
 
       if token.present?
         begin
-          decoded_token = JWT.decode(token, Rails.application.secret_key_base, true, algorithm: 'HS256')[0]
-          user = User.find_by(id: decoded_token["user_id"])
+          decoded_token = JWT.decode(token, Rails.application.credentials.secret_key_base, true, { algorithm: 'HS256' })[0]
+          user = User.find_by(id: decoded_token["user_id"]) || reject_unauthorized_connection
 
           return user if user.present?
+        rescue JWT::ExpiredSignature
+          reject_unauthorized_connection("Token expired")
         rescue JWT::DecodeError
-          Rails.logger.warn "Invalid JWT Token: Connection rejected"
+          reject_unauthorized_connection("Invalid token")
         end
       end
-
-      reject_unauthorized_connection
     end
   end
 end
