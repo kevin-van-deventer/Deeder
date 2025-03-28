@@ -35,17 +35,17 @@ const AppRouter = () => {
     <Router>
       <Navbar />
       <Routes>
-        <>
-          <Route
-            path="/"
-            element={<Navigate to={user ? "/dashboard" : "/login"} />}
-          />
-          <Route path="/login" element={<LoginPage setUser={setUser} />} />
-          <Route path="/signup" element={<SignupPage setUser={setUser} />} />
-          <Route path="/dashboard" element={<Dashboard />} />
-          <Route path="/maps" element={<MapsPage />} />
-          <Route path="/chat" element={<ChatPage />} />
-        </>
+        {/* <> */}
+        <Route
+          path="/"
+          element={<Navigate to={user ? "/dashboard" : "/login"} />}
+        />
+        <Route path="/login" element={<LoginPage setUser={setUser} />} />
+        <Route path="/signup" element={<SignupPage setUser={setUser} />} />
+        <Route path="/dashboard" element={<Dashboard />} />
+        <Route path="/maps" element={<MapsPage />} />
+        <Route path="/chat" element={<ChatPage />} />
+        {/* </> */}
       </Routes>
     </Router>
   )
