@@ -20,7 +20,7 @@ const Navbar = () => {
   const handleLogout = () => {
     localStorage.removeItem("token")
     setIsLoggedIn(false)
-    navigate("/")
+    navigate("/login")
     // window.location.reload() // Ensures AppRouter updates
   }
 
