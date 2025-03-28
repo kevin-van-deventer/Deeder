@@ -321,10 +321,10 @@ const Dashboard = () => {
   const handleLogout = () => {
     localStorage.removeItem("token")
     setUser(null) // Update user state to trigger re-render
-    setTimeout(() => {
-      navigate("/login")
-      window.location.reload() // Ensure full reset
-    }, 100) // Delay to ensure state updates
+    // setTimeout(() => {
+    navigate("/login")
+    // window.location.reload() // Ensure full reset
+    // }, 100) // Delay to ensure state updates
   }
 
   return (
