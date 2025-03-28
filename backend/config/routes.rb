@@ -1,5 +1,6 @@
 Rails.application.routes.draw do
-  root to: ->(env) { [200, {'Content-Type' => 'text/plain'}, ['API Server']] }
+  # root to: ->(env) { [200, {'Content-Type' => 'text/plain'}, ['API Server']] }
+  root to: 'static#index'
   mount ActionCable.server => "/cable"
 
   # User Routes

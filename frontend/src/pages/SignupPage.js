@@ -1,9 +1,9 @@
 import React, { useState } from "react"
 import { useNavigate } from "react-router-dom"
 import axios from "axios"
-
-// import components
 import AuthForm from "../components/AuthForm"
+
+import "./LoginSignup.css"
 
 const SignupPage = ({ setUser }) => {
   const [formData, setFormData] = useState({
