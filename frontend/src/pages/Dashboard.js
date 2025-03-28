@@ -228,9 +228,9 @@ const Dashboard = () => {
       setIsAddingDeed(false)
       fetchDeeds(user.id)
 
-      setTimeout(() => {
-        window.location.reload()
-      }, 100)
+      // setTimeout(() => {
+      //   window.location.reload()
+      // }, 100)
     } catch (error) {
       console.error("Error submitting deed request:", error)
       alert("Failed to submit deed request.")
