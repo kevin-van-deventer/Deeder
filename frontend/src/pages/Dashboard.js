@@ -148,7 +148,6 @@ const Dashboard = () => {
         }
       )
 
-      setDeeds(response.data)
       const volunteeredResponse = await axios.get(
         `${process.env.REACT_APP_API_BASE_URL}/users/${userId}/volunteered_deeds`,
         {
@@ -156,6 +155,7 @@ const Dashboard = () => {
         }
       )
 
+      setDeeds(response.data)
       setVolunteeredDeeds(volunteeredResponse.data)
     } catch (error) {
       console.error("Error fetching deeds:", error)
