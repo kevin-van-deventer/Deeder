@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react"
+import React, { useEffect, useState, useCallback } from "react"
 import axios from "axios"
 import { jwtDecode } from "jwt-decode"
 import { useNavigate } from "react-router-dom"
@@ -33,47 +33,8 @@ const Dashboard = () => {
 
   const token = localStorage.getItem("token")
 
-  useEffect(() => {
-    if (token) {
-      const decodedToken = jwtDecode(token)
-      fetchUserDetails(decodedToken.user_id)
-      fetchDeeds(decodedToken.user_id)
-    }
-
-    // Set up ActionCable to listen for deed updates
-    const cable = createConsumer(
-      `${process.env.REACT_APP_WS_BASE_URL}?token=${token}`
-    )
-    console.log("Created Action Cable consumer")
-    // Periodically log the state:
-    setInterval(() => {
-      console.log("WebSocket state:", cable.connection.state)
-    }, 5000)
-
-    const deedsChannel = cable.subscriptions.create("DeedsChannel", {
-      connected() {
-        console.log("Connected to DeedsChannel")
-      },
-      disconnected() {
-        console.log("Disconnected from DeedsChannel")
-      },
-      received(data) {
-        console.log("Received deed update:", data)
-        setDeeds(data.deeds)
-      },
-      // received: (data) => {
-      //   console.log("Received deed update:", data)
-      //   setDeeds(data.deeds)
-      // },
-    })
-
-    return () => {
-      deedsChannel.unsubscribe()
-    }
-  }, [token])
-
   // fetch user details from api
-  const fetchUserDetails = async (userId) => {
+  const fetchUserDetails = useCallback(async (userId) => {
     if (!userId) return
 
     try {
@@ -114,7 +75,83 @@ const Dashboard = () => {
     } catch (error) {
       console.error("Error fetching user details:", error)
     }
-  }
+  })
+  // Fetch deeds requested or volunteered by the user
+  const fetchDeeds = useCallback(async (userId) => {
+    try {
+      const response = await axios.get(
+        `${process.env.REACT_APP_API_BASE_URL}/users/${userId}/deeds`,
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      )
+      const volunteeredResponse = await axios.get(
+        `${process.env.REACT_APP_API_BASE_URL}/users/${userId}/volunteered_deeds`,
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      )
+      // if i want them to run in parallel to be more efficient
+      // const [response, volunteeredResponse] = await Promise.all([
+      //   axios.get(
+      //     `${process.env.REACT_APP_API_BASE_URL}/users/${userId}/deeds`,
+      //     { headers: { Authorization: `Bearer ${token}` } }
+      //   ),
+      //   axios.get(
+      //     `${process.env.REACT_APP_API_BASE_URL}/users/${userId}/volunteered_deeds`,
+      //     { headers: { Authorization: `Bearer ${token}` } }
+      //   )
+      // ]);
+
+      setDeeds(response.data)
+      setVolunteeredDeeds(volunteeredResponse.data)
+    } catch (error) {
+      console.error("Error fetching deeds:", error)
+    }
+  })
+
+  useEffect(() => {
+    if (token) {
+      const decodedToken = jwtDecode(token)
+      fetchUserDetails(decodedToken.user_id)
+      fetchDeeds(decodedToken.user_id)
+    }
+
+    // Set up ActionCable to listen for deed updates
+    const cable = createConsumer(
+      `${process.env.REACT_APP_WS_BASE_URL}?token=${token}`
+    )
+    console.log("Created Action Cable consumer")
+    console.log(cable)
+
+    const deedsChannel = cable.subscriptions.create(
+      { channel: "DeedsChannel" },
+      {
+        connected() {
+          console.log("Connected to DeedsChannel")
+        },
+        disconnected() {
+          console.log("Disconnected from DeedsChannel")
+        },
+        received(data) {
+          console.log("Received deed update:", data)
+          setDeeds(data.deeds)
+        },
+        // received: (data) => {
+        //   console.log("Received deed update:", data)
+        //   setDeeds(data.deeds)
+        // },
+      }
+    )
+
+    // Optionally, call fetchDeeds or fetchUserDetails here if needed
+    fetchDeeds()
+    fetchUserDetails()
+
+    return () => {
+      deedsChannel.unsubscribe()
+    }
+  }, [token, fetchDeeds, fetchUserDetails])
 
   // Handle input changes
   const handleChange = (e) => {
@@ -150,40 +187,6 @@ const Dashboard = () => {
       fetchUserDetails(user.id)
     } catch (error) {
       console.error("Error updating user details:", error)
-    }
-  }
-
-  // Fetch deeds requested or volunteered by the user
-  const fetchDeeds = async (userId) => {
-    try {
-      const response = await axios.get(
-        `${process.env.REACT_APP_API_BASE_URL}/users/${userId}/deeds`,
-        {
-          headers: { Authorization: `Bearer ${token}` },
-        }
-      )
-      const volunteeredResponse = await axios.get(
-        `${process.env.REACT_APP_API_BASE_URL}/users/${userId}/volunteered_deeds`,
-        {
-          headers: { Authorization: `Bearer ${token}` },
-        }
-      )
-      // if i want them to run in parallel to be more efficient
-      // const [response, volunteeredResponse] = await Promise.all([
-      //   axios.get(
-      //     `${process.env.REACT_APP_API_BASE_URL}/users/${userId}/deeds`,
-      //     { headers: { Authorization: `Bearer ${token}` } }
-      //   ),
-      //   axios.get(
-      //     `${process.env.REACT_APP_API_BASE_URL}/users/${userId}/volunteered_deeds`,
-      //     { headers: { Authorization: `Bearer ${token}` } }
-      //   )
-      // ]);
-
-      setDeeds(response.data)
-      setVolunteeredDeeds(volunteeredResponse.data)
-    } catch (error) {
-      console.error("Error fetching deeds:", error)
     }
   }
 
