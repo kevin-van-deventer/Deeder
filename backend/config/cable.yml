@@ -16,12 +16,12 @@ production:
   ssl: false
   channel_prefix: deeder_production
   timeout: 5
-  allowed_request_origins:
-    - https://deeder.onrender.com
-    - https://www.deeder.onrender.com
-    - https://deeder-1.onrender.com
-    - https://www.deeder-1.onrender.com
-    - http://localhost:3000
+  # allowed_request_origins:
+  #   - https://deeder.onrender.com
+  #   - https://www.deeder.onrender.com
+  #   - https://deeder-1.onrender.com
+  #   - https://www.deeder-1.onrender.com
+  #   - http://localhost:3000
   # connects_to:
   #   database:
   #     writing: cable
