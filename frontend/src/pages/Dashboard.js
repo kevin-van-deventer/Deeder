@@ -44,6 +44,11 @@ const Dashboard = () => {
     const cable = createConsumer(
       `${process.env.REACT_APP_WS_BASE_URL}?token=${token}`
     )
+    console.log("Created Action Cable consumer")
+    // Periodically log the state:
+    setInterval(() => {
+      console.log("WebSocket state:", cable.connection.state)
+    }, 5000)
 
     const deedsChannel = cable.subscriptions.create("DeedsChannel", {
       received: (data) => {
