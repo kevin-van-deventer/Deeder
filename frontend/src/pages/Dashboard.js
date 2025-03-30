@@ -147,13 +147,23 @@ const Dashboard = () => {
           headers: { Authorization: `Bearer ${token}` },
         }
       )
-
       const volunteeredResponse = await axios.get(
         `${process.env.REACT_APP_API_BASE_URL}/users/${userId}/volunteered_deeds`,
         {
           headers: { Authorization: `Bearer ${token}` },
         }
       )
+      // if i want them to run in parallel to be more efficient
+      // const [response, volunteeredResponse] = await Promise.all([
+      //   axios.get(
+      //     `${process.env.REACT_APP_API_BASE_URL}/users/${userId}/deeds`,
+      //     { headers: { Authorization: `Bearer ${token}` } }
+      //   ),
+      //   axios.get(
+      //     `${process.env.REACT_APP_API_BASE_URL}/users/${userId}/volunteered_deeds`,
+      //     { headers: { Authorization: `Bearer ${token}` } }
+      //   )
+      // ]);
 
       setDeeds(response.data)
       setVolunteeredDeeds(volunteeredResponse.data)

@@ -80,7 +80,8 @@ Rails.application.configure do
     "https://deeder.onrender.com",
     "http://deeder-1.onrender.com",
     "http://deeder.onrender.com",
-    /wss?:\/\/deeder\.onrender\.com/
+    /wss?:\/\/deeder\.onrender\.com/,
+    /wss?:\/\/deeder-1\.onrender\.com/
   ]
   # config.action_cable.redis = {
   #   url: ENV['REDIS_URL'],
