@@ -10,8 +10,10 @@ module ApplicationCable
       private
   
       def find_verified_user
-        if (token = request.params[:token])
-          decoded_token = JWT.decode(token, Rails.application.secrets.secret_key_base, true, algorithm: 'HS256')
+        token = request.params[:token]
+
+        if (token)
+          decoded_token = JWT.decode(token, Rails.application.credentials.secret_key_base, true, { algorithm: 'HS256' })[0]
           user_id = decoded_token[0]["user_id"]
           verified_user = User.find_by(id: user_id)
   
