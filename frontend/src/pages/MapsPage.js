@@ -42,11 +42,22 @@ const MapsPage = () => {
       `${process.env.REACT_APP_WS_BASE_URL}?token=${token}`
     ) // Adjust URL if needed
     const subscription = cable.subscriptions.create("DeedsChannel", {
-      received: (data) => {
+      connected() {
+        console.log("Connected to DeedsChannel")
+      },
+      disconnected() {
+        console.log("Disconnected from DeedsChannel")
+      },
+      received(data) {
         console.log("WebSocket Update Received:", data)
         setDeeds(data.deeds)
         setUnfulfilledDeeds(data.unfulfilled_count)
       },
+      // received: (data) => {
+      //   console.log("WebSocket Update Received:", data)
+      //   setDeeds(data.deeds)
+      //   setUnfulfilledDeeds(data.unfulfilled_count)
+      // },
     })
 
     return () => {

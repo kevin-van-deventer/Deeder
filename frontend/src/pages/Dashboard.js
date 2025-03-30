@@ -51,10 +51,20 @@ const Dashboard = () => {
     }, 5000)
 
     const deedsChannel = cable.subscriptions.create("DeedsChannel", {
-      received: (data) => {
+      connected() {
+        console.log("Connected to DeedsChannel")
+      },
+      disconnected() {
+        console.log("Disconnected from DeedsChannel")
+      },
+      received(data) {
         console.log("Received deed update:", data)
         setDeeds(data.deeds)
       },
+      // received: (data) => {
+      //   console.log("Received deed update:", data)
+      //   setDeeds(data.deeds)
+      // },
     })
 
     return () => {

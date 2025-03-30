@@ -4,6 +4,6 @@ class DeedsChannel < ApplicationCable::Channel
   end
 
   def unsubscribed
-    # stop_all_streams
+    Rails.logger.info "Unsubscribed from deeds_channel"
   end
 end
