@@ -224,6 +224,14 @@ const Dashboard = () => {
           headers: { Authorization: `Bearer ${token}` },
         }
       )
+      // clear form fields
+      setDeedData({
+        description: "",
+        deed_type: "one-time",
+        address: "",
+        latitude: "",
+        longitude: "",
+      })
 
       setIsAddingDeed(false)
       fetchDeeds(user.id)
