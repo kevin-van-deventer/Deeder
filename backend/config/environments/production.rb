@@ -74,7 +74,7 @@ Rails.application.configure do
   #   authentication: :plain
   # }
 
-  config.action_cable.url = "wss://deeder-1.onrender.com/cable"
+  config.action_cable.url = "wss://deeder.onrender.com/cable"
   config.action_cable.allowed_request_origins = [
     "https://deeder-1.onrender.com",
     "https://deeder.onrender.com",
