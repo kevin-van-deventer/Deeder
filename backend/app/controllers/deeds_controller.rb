@@ -45,11 +45,11 @@ class DeedsController < ApplicationController
     def create
       deed = @current_user.requested_deeds.build(deed_params)
       if deed.save
-        updated_deeds = Deed.where(status: "unfulfilled")
-        ActionCable.server.broadcast("deeds_channel", {
-          unfulfilled_count: updated_deeds.count,
-          deeds: updated_deeds
-        }) # ✅ Broadcast updated count
+        # updated_deeds = Deed.where(status: "unfulfilled")
+        # ActionCable.server.broadcast("deeds_channel", {
+        #   unfulfilled_count: updated_deeds.count,
+        #   deeds: updated_deeds
+        # }) # ✅ Broadcast updated count
         render json: { message: 'Deed created successfully', deed: deed }, status: :created
       else
         render json: { errors: deed.errors.full_messages }, status: :unprocessable_entity
