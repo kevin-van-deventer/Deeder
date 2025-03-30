@@ -67,10 +67,6 @@ const Dashboard = () => {
       }
     )
 
-    // Optionally, call fetchDeeds or fetchUserDetails here if needed
-    fetchDeeds()
-    fetchUserDetails()
-
     return () => {
       deedsChannel.unsubscribe()
     }
