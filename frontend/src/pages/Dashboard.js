@@ -260,6 +260,7 @@ const Dashboard = () => {
 
       setIsAddingDeed(false)
       fetchDeeds(user.id)
+      fetchUserDetails(user.id)
 
       // setTimeout(() => {
       //   window.location.reload()
@@ -283,6 +284,7 @@ const Dashboard = () => {
 
       alert("Deed deleted successfully!")
       fetchDeeds(user.id)
+      fetchUserDetails(user.id)
     } catch (error) {
       console.error(
         "Error deleting deed:",
