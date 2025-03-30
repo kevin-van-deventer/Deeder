@@ -33,83 +33,6 @@ const Dashboard = () => {
 
   const token = localStorage.getItem("token")
 
-  // fetch user details from api
-  const fetchUserDetails = useCallback(async (userId) => {
-    if (!userId) return
-
-    try {
-      const response = await axios.get(
-        `${process.env.REACT_APP_API_BASE_URL}/users/${userId}`,
-        {
-          headers: { Authorization: `Bearer ${token}` },
-        }
-      )
-
-      setUser(response.data)
-      setFulfilledDeeds(response.data.fulfilled_deeds)
-      setUnfulfilledDeeds(response.data.unfulfilled_deeds)
-      setDeedsFulfilledForOthers(response.data.deeds_fulfilled_for_others)
-
-      setFormData({
-        first_name: response.data.first_name,
-        last_name: response.data.last_name,
-        email: response.data.email,
-      })
-
-      // Fetch volunteered deeds
-      const volunteeredResponse = await axios.get(
-        `${process.env.REACT_APP_API_BASE_URL}/users/${userId}/volunteered_deeds`,
-        {
-          headers: { Authorization: `Bearer ${token}` },
-        }
-      )
-
-      const allVolunteeredDeeds = volunteeredResponse.data
-      // Filter only deeds where the user was the one who completed them
-      const completedVolunteeredDeeds = allVolunteeredDeeds.filter(
-        (deed) => deed.completed_by && deed.completed_by.id === userId
-      )
-
-      setVolunteeredDeeds(allVolunteeredDeeds)
-      setCompletedVolunteeredDeeds(completedVolunteeredDeeds)
-    } catch (error) {
-      console.error("Error fetching user details:", error)
-    }
-  })
-  // Fetch deeds requested or volunteered by the user
-  const fetchDeeds = useCallback(async (userId) => {
-    try {
-      const response = await axios.get(
-        `${process.env.REACT_APP_API_BASE_URL}/users/${userId}/deeds`,
-        {
-          headers: { Authorization: `Bearer ${token}` },
-        }
-      )
-      const volunteeredResponse = await axios.get(
-        `${process.env.REACT_APP_API_BASE_URL}/users/${userId}/volunteered_deeds`,
-        {
-          headers: { Authorization: `Bearer ${token}` },
-        }
-      )
-      // if i want them to run in parallel to be more efficient
-      // const [response, volunteeredResponse] = await Promise.all([
-      //   axios.get(
-      //     `${process.env.REACT_APP_API_BASE_URL}/users/${userId}/deeds`,
-      //     { headers: { Authorization: `Bearer ${token}` } }
-      //   ),
-      //   axios.get(
-      //     `${process.env.REACT_APP_API_BASE_URL}/users/${userId}/volunteered_deeds`,
-      //     { headers: { Authorization: `Bearer ${token}` } }
-      //   )
-      // ]);
-
-      setDeeds(response.data)
-      setVolunteeredDeeds(volunteeredResponse.data)
-    } catch (error) {
-      console.error("Error fetching deeds:", error)
-    }
-  })
-
   useEffect(() => {
     if (token) {
       const decodedToken = jwtDecode(token)
@@ -151,7 +74,85 @@ const Dashboard = () => {
     return () => {
       deedsChannel.unsubscribe()
     }
-  }, [token, fetchDeeds, fetchUserDetails])
+  }, [token])
+
+  // fetch user details from api
+  const fetchUserDetails = async (userId) => {
+    if (!userId) return
+
+    try {
+      const response = await axios.get(
+        `${process.env.REACT_APP_API_BASE_URL}/users/${userId}`,
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      )
+
+      setUser(response.data)
+      setFulfilledDeeds(response.data.fulfilled_deeds)
+      setUnfulfilledDeeds(response.data.unfulfilled_deeds)
+      setDeedsFulfilledForOthers(response.data.deeds_fulfilled_for_others)
+
+      setFormData({
+        first_name: response.data.first_name,
+        last_name: response.data.last_name,
+        email: response.data.email,
+      })
+
+      // Fetch volunteered deeds
+      const volunteeredResponse = await axios.get(
+        `${process.env.REACT_APP_API_BASE_URL}/users/${userId}/volunteered_deeds`,
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      )
+
+      const allVolunteeredDeeds = volunteeredResponse.data
+      // Filter only deeds where the user was the one who completed them
+      const completedVolunteeredDeeds = allVolunteeredDeeds.filter(
+        (deed) => deed.completed_by && deed.completed_by.id === userId
+      )
+
+      setVolunteeredDeeds(allVolunteeredDeeds)
+      setCompletedVolunteeredDeeds(completedVolunteeredDeeds)
+    } catch (error) {
+      console.error("Error fetching user details:", error)
+    }
+  }
+
+  // Fetch deeds requested or volunteered by the user
+  const fetchDeeds = async (userId) => {
+    try {
+      const response = await axios.get(
+        `${process.env.REACT_APP_API_BASE_URL}/users/${userId}/deeds`,
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      )
+      const volunteeredResponse = await axios.get(
+        `${process.env.REACT_APP_API_BASE_URL}/users/${userId}/volunteered_deeds`,
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      )
+      // if i want them to run in parallel to be more efficient
+      // const [response, volunteeredResponse] = await Promise.all([
+      //   axios.get(
+      //     `${process.env.REACT_APP_API_BASE_URL}/users/${userId}/deeds`,
+      //     { headers: { Authorization: `Bearer ${token}` } }
+      //   ),
+      //   axios.get(
+      //     `${process.env.REACT_APP_API_BASE_URL}/users/${userId}/volunteered_deeds`,
+      //     { headers: { Authorization: `Bearer ${token}` } }
+      //   )
+      // ]);
+
+      setDeeds(response.data)
+      setVolunteeredDeeds(volunteeredResponse.data)
+    } catch (error) {
+      console.error("Error fetching deeds:", error)
+    }
+  }
 
   // Handle input changes
   const handleChange = (e) => {

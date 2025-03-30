@@ -88,7 +88,7 @@ Rails.application.configure do
   #   ssl: false
   # }
 
-  config.action_cable.disable_request_forgery_protection = false
+  config.action_cable.disable_request_forgery_protection = true
   config.action_cable.allow_same_origin_as_host = true
 
   # Enable locale fallbacks for I18n (makes lookups for any locale fall back to
