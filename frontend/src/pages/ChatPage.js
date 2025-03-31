@@ -118,7 +118,7 @@ const ChatPage = () => {
     }
 
     // Optimistically update UI before sending request
-    // setMessages((prevMessages) => [...prevMessages, newMessage]);
+    setMessages((prevMessages) => [...prevMessages, newMessage])
     setMessageContent("") // Clear input field
 
     try {
