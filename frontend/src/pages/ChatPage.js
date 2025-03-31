@@ -119,12 +119,13 @@ const ChatPage = () => {
 
     // Optimistically update UI before sending request
     setMessages((prevMessages) => [...prevMessages, newMessage])
+    const contentToSend = messageContent
     setMessageContent("") // Clear input field
 
     try {
       await axios.post(
         `${process.env.REACT_APP_API_BASE_URL}/chat_rooms/${chatRoom.id}/messages`,
-        { content: messageContent },
+        { content: contentToSend },
         { headers: { Authorization: `Bearer ${token}` } }
       )
     } catch (error) {
