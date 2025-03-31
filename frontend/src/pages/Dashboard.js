@@ -706,7 +706,7 @@ const Dashboard = () => {
                 /> */}
                 <button
                   onClick={handleConvertAndSubmitDeed}
-                  disabled={!deedData.latitude || !deedData.longitude}
+                  // disabled={!deedData.latitude || !deedData.longitude}
                   className="deed-button"
                 >
                   Submit Deed
@@ -759,8 +759,13 @@ const Dashboard = () => {
                       Mark as Completed
                     </button>
                   )}
-                  {/* ✅ Show Chat button only if user is a volunteer */}
-                  <button className="chat-button">Chat</button>
+                  {/* navigate user to chat page */}
+                  <button
+                    className="chat-button"
+                    onClick={() => navigate("/chat")}
+                  >
+                    Chat
+                  </button>
 
                   {/* <button className="complete-button" onClick={() => handleCompleteDeed(deed.id)}>Mark as Completed</button> */}
                 </li>
