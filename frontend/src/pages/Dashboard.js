@@ -191,7 +191,88 @@ const Dashboard = () => {
     setDeedData({ ...deedData, [e.target.name]: e.target.value })
   }
 
+  // old coordinates and submit deed functions
   // Convert Address to Latitude & Longitude
+  // const getCoordinatesFromAddress = async (address) => {
+  //   const apiKey = "AIzaSyAx_Rbj5JBqB_QStMi27jDFWMf3HJ-aZm0"
+  //   const url = `https://maps.googleapis.com/maps/api/geocode/json?address=${encodeURIComponent(
+  //     address
+  //   )}&key=${apiKey}`
+  //   try {
+  //     const response = await axios.get(url)
+  //     if (response.data.results.length > 0) {
+  //       const location = response.data.results[0].geometry.location
+  //       setDeedData((prevData) => ({
+  //         ...prevData,
+  //         latitude: location.lat,
+  //         longitude: location.lng,
+  //       }))
+  //     } else {
+  //       alert("Address not found. Please enter a valid address.")
+  //     }
+  //   } catch (error) {
+  //     console.error("Error fetching coordinates:", error)
+  //     alert("Could not fetch location. Try again.")
+  //   }
+  // }
+
+  // Handle submitting a new deed request
+  // const handleSubmitDeed = async () => {
+  //   const token = localStorage.getItem("token")
+  //   const decodedToken = jwtDecode(token)
+  //   const userId = decodedToken.user_id
+
+  //   if (!deedData.description || !deedData.deed_type) {
+  //     alert("Please fill all fields")
+  //     return
+  //   }
+
+  //   // Ensure latitude and longitude are set
+  //   if (!deedData.latitude || !deedData.longitude) {
+  //     alert("Please click 'Convert Address to Coordinates' first.")
+  //     return
+  //   }
+
+  //   try {
+  //     await axios.post(
+  //       `${process.env.REACT_APP_API_BASE_URL}/deeds`,
+  //       {
+  //         deed: {
+  //           description: deedData.description,
+  //           deed_type: deedData.deed_type,
+  //           latitude: deedData.latitude,
+  //           longitude: deedData.longitude,
+  //           address: deedData.address, // Include address
+  //           requester_id: userId,
+  //         },
+  //       },
+  //       {
+  //         headers: { Authorization: `Bearer ${token}` },
+  //       }
+  //     )
+  //     // clear form fields
+  //     setDeedData({
+  //       description: "",
+  //       deed_type: "one-time",
+  //       address: "",
+  //       latitude: "",
+  //       longitude: "",
+  //     })
+
+  //     setIsAddingDeed(false)
+  //     fetchDeeds(user.id)
+  //     fetchUserDetails(user.id)
+
+  //     // setTimeout(() => {
+  //     //   window.location.reload()
+  //     // }, 100)
+  //   } catch (error) {
+  //     console.error("Error submitting deed request:", error)
+  //     alert("Failed to submit deed request.")
+  //   }
+  // }
+
+  // Modified: Returns the location object instead of updating state directly.
   const getCoordinatesFromAddress = async (address) => {
     const apiKey = "AIzaSyAx_Rbj5JBqB_QStMi27jDFWMf3HJ-aZm0"
     const url = `https://maps.googleapis.com/maps/api/geocode/json?address=${encodeURIComponent(
@@ -200,48 +281,47 @@ const Dashboard = () => {
     try {
       const response = await axios.get(url)
       if (response.data.results.length > 0) {
-        const location = response.data.results[0].geometry.location
-        setDeedData((prevData) => ({
-          ...prevData,
-          latitude: location.lat,
-          longitude: location.lng,
-        }))
+        return response.data.results[0].geometry.location
       } else {
-        alert("Address not found. Please enter a valid address.")
+        throw new Error("Address not found. Please enter a valid address.")
       }
     } catch (error) {
       console.error("Error fetching coordinates:", error)
-      alert("Could not fetch location. Try again.")
+      throw error
     }
   }
 
-  // Handle submitting a new deed request
-  const handleSubmitDeed = async () => {
-    const token = localStorage.getItem("token")
-    const decodedToken = jwtDecode(token)
-    const userId = decodedToken.user_id
-
-    if (!deedData.description || !deedData.deed_type) {
+  // New combined function: converts address to coordinates and then submits the deed.
+  const handleConvertAndSubmitDeed = async () => {
+    if (!deedData.description || !deedData.deed_type || !deedData.address) {
       alert("Please fill all fields")
       return
     }
 
-    // Ensure latitude and longitude are set
-    if (!deedData.latitude || !deedData.longitude) {
-      alert("Please click 'Convert Address to Coordinates' first.")
-      return
-    }
-
     try {
+      // Await conversion so that we get the coordinates before submitting.
+      const location = await getCoordinatesFromAddress(deedData.address)
+      // Optionally update state (if you need to see the values in the form)
+      setDeedData((prevData) => ({
+        ...prevData,
+        latitude: location.lat,
+        longitude: location.lng,
+      }))
+
+      const token = localStorage.getItem("token")
+      const decodedToken = jwtDecode(token)
+      const userId = decodedToken.user_id
+
+      // Submit the deed using the returned coordinates
       await axios.post(
         `${process.env.REACT_APP_API_BASE_URL}/deeds`,
         {
           deed: {
             description: deedData.description,
             deed_type: deedData.deed_type,
-            latitude: deedData.latitude,
-            longitude: deedData.longitude,
-            address: deedData.address, // Include address
+            latitude: location.lat,
+            longitude: location.lng,
+            address: deedData.address,
             requester_id: userId,
           },
         },
@@ -249,7 +329,8 @@ const Dashboard = () => {
           headers: { Authorization: `Bearer ${token}` },
         }
       )
-      // clear form fields
+
+      // Clear the form fields and close the modal
       setDeedData({
         description: "",
         deed_type: "one-time",
@@ -257,17 +338,11 @@ const Dashboard = () => {
         latitude: "",
         longitude: "",
       })
-
       setIsAddingDeed(false)
       fetchDeeds(user.id)
       fetchUserDetails(user.id)
-
-      // setTimeout(() => {
-      //   window.location.reload()
-      // }, 100)
     } catch (error) {
-      console.error("Error submitting deed request:", error)
-      alert("Failed to submit deed request.")
+      alert(error.message || "Failed to submit deed request.")
     }
   }
 
@@ -539,15 +614,15 @@ const Dashboard = () => {
                 )}
 
                 {/* Mark as Completed Button */}
-                {deed.status === "unfulfilled" && (
-                  <button
-                    className="complete-button"
-                    // onClick={() => handleConfirmCompletion(deed.id)}
-                  >
-                    {deed.completion_status}
-                    {/* Mark as Completed */}
-                  </button>
-                )}
+                {/* {deed.status === "unfulfilled" && ( */}
+                {/* <button */}
+                {/* className="complete-button" */}
+                {/* // onClick={() => handleConfirmCompletion(deed.id)} */}
+                {/* > */}
+                {/* {deed.completion_status} */}
+                {/* Mark as Completed */}
+                {/* </button> */}
+                {/* // )} */}
 
                 {/* If deed is fulfilled, show confirmation */}
                 {deed.status === "fulfilled" && (
@@ -607,13 +682,13 @@ const Dashboard = () => {
                   onChange={handleDeedChange}
                   className="deed-input"
                 />
-                <button
+                {/* <button
                   onClick={() => getCoordinatesFromAddress(deedData.address)}
                   className="deed-button"
                 >
                   Convert Address to Coordinates
-                </button>
-                <input
+                </button> */}
+                {/* <input
                   type="text"
                   name="latitude"
                   value={deedData.latitude}
@@ -628,9 +703,9 @@ const Dashboard = () => {
                   placeholder="Longitude"
                   readOnly
                   className="deed-input hidden"
-                />
+                /> */}
                 <button
-                  onClick={handleSubmitDeed}
+                  onClick={handleConvertAndSubmitDeed}
                   disabled={!deedData.latitude || !deedData.longitude}
                   className="deed-button"
                 >
