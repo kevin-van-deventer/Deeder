@@ -319,22 +319,22 @@ const Dashboard = () => {
       alert("Failed to mark deed as completed.")
     }
   }
+  // if a user wants to pre confirm before 5 users confirm
+  // const handleConfirmCompletion = async (deedId) => {
+  //   try {
+  //     const response = await axios.post(
+  //       `${process.env.REACT_APP_API_BASE_URL}/deeds/${deedId}/confirm_complete`,
+  //       {},
+  //       { headers: { Authorization: `Bearer ${token}` } }
+  //     )
 
-  const handleConfirmCompletion = async (deedId) => {
-    try {
-      const response = await axios.post(
-        `${process.env.REACT_APP_API_BASE_URL}/deeds/${deedId}/confirm_complete`,
-        {},
-        { headers: { Authorization: `Bearer ${token}` } }
-      )
-
-      alert(response.data.message)
-      fetchDeeds(user.id) // Refresh deeds list
-    } catch (error) {
-      console.error("Error confirming completion:", error)
-      alert(error.response?.data?.error || "Failed to confirm completion.")
-    }
-  }
+  //     alert(response.data.message)
+  //     fetchDeeds(user.id) // Refresh deeds list
+  //   } catch (error) {
+  //     console.error("Error confirming completion:", error)
+  //     alert(error.response?.data?.error || "Failed to confirm completion.")
+  //   }
+  // }
 
   const handleRepostDeed = async (deedId) => {
     try {
@@ -619,7 +619,7 @@ const Dashboard = () => {
                   value={deedData.latitude}
                   placeholder="Latitude"
                   readOnly
-                  className="deed-input"
+                  className="deed-input hidden"
                 />
                 <input
                   type="text"
@@ -627,7 +627,7 @@ const Dashboard = () => {
                   value={deedData.longitude}
                   placeholder="Longitude"
                   readOnly
-                  className="deed-input"
+                  className="deed-input hidden"
                 />
                 <button
                   onClick={handleSubmitDeed}

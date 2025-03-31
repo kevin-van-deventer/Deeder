@@ -300,6 +300,10 @@ p {
   scrollbar-width: none; /* Hides scrollbar in Firefox */
 }
 
+.hidden {
+  display: none;
+}
+
 /* Input & Select Fields */
 .deed-input {
   width: 100%;
