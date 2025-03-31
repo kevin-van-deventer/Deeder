@@ -50,8 +50,6 @@ const Dashboard = () => {
     const cable = createConsumer(
       `${process.env.REACT_APP_WS_BASE_URL}?token=${token}`
     )
-    // console.log("Created Action Cable consumer")
-    // console.log(cable)
 
     const deedsChannel = cable.subscriptions.create(
       { channel: "DeedsChannel" },
@@ -66,10 +64,6 @@ const Dashboard = () => {
           console.log("Received deed update:", data)
           setDeeds(data.deeds)
         },
-        // received: (data) => {
-        //   console.log("Received deed update:", data)
-        //   setDeeds(data.deeds)
-        // },
       }
     )
 
@@ -197,87 +191,6 @@ const Dashboard = () => {
     setDeedData({ ...deedData, [e.target.name]: e.target.value })
   }
 
-  // old coordinates and submit deed functions
-  // Convert Address to Latitude & Longitude
-  // const getCoordinatesFromAddress = async (address) => {
-  //   const apiKey = "AIzaSyAx_Rbj5JBqB_QStMi27jDFWMf3HJ-aZm0"
-  //   const url = `https://maps.googleapis.com/maps/api/geocode/json?address=${encodeURIComponent(
-  //     address
-  //   )}&key=${apiKey}`
-  //   try {
-  //     const response = await axios.get(url)
-  //     if (response.data.results.length > 0) {
-  //       const location = response.data.results[0].geometry.location
-  //       setDeedData((prevData) => ({
-  //         ...prevData,
-  //         latitude: location.lat,
-  //         longitude: location.lng,
-  //       }))
-  //     } else {
-  //       alert("Address not found. Please enter a valid address.")
-  //     }
-  //   } catch (error) {
-  //     console.error("Error fetching coordinates:", error)
-  //     alert("Could not fetch location. Try again.")
-  //   }
-  // }
-
-  // Handle submitting a new deed request
-  // const handleSubmitDeed = async () => {
-  //   const token = localStorage.getItem("token")
-  //   const decodedToken = jwtDecode(token)
-  //   const userId = decodedToken.user_id
-
-  //   if (!deedData.description || !deedData.deed_type) {
-  //     alert("Please fill all fields")
-  //     return
-  //   }
-
-  //   // Ensure latitude and longitude are set
-  //   if (!deedData.latitude || !deedData.longitude) {
-  //     alert("Please click 'Convert Address to Coordinates' first.")
-  //     return
-  //   }
-
-  //   try {
-  //     await axios.post(
-  //       `${process.env.REACT_APP_API_BASE_URL}/deeds`,
-  //       {
-  //         deed: {
-  //           description: deedData.description,
-  //           deed_type: deedData.deed_type,
-  //           latitude: deedData.latitude,
-  //           longitude: deedData.longitude,
-  //           address: deedData.address, // Include address
-  //           requester_id: userId,
-  //         },
-  //       },
-  //       {
-  //         headers: { Authorization: `Bearer ${token}` },
-  //       }
-  //     )
-  //     // clear form fields
-  //     setDeedData({
-  //       description: "",
-  //       deed_type: "one-time",
-  //       address: "",
-  //       latitude: "",
-  //       longitude: "",
-  //     })
-
-  //     setIsAddingDeed(false)
-  //     fetchDeeds(user.id)
-  //     fetchUserDetails(user.id)
-
-  //     // setTimeout(() => {
-  //     //   window.location.reload()
-  //     // }, 100)
-  //   } catch (error) {
-  //     console.error("Error submitting deed request:", error)
-  //     alert("Failed to submit deed request.")
-  //   }
-  // }
-
   // Modified: Returns the location object instead of updating state directly.
   const getCoordinatesFromAddress = async (address) => {
     const apiKey = "AIzaSyAx_Rbj5JBqB_QStMi27jDFWMf3HJ-aZm0"
@@ -400,6 +313,7 @@ const Dashboard = () => {
       alert("Failed to mark deed as completed.")
     }
   }
+
   // if a user wants to pre confirm before 5 users confirm
   // const handleConfirmCompletion = async (deedId) => {
   //   try {
@@ -579,11 +493,6 @@ const Dashboard = () => {
             Deeds
           </h2>
           {deeds.map((deed) => {
-            console.log("Deed created at:", new Date(deed.created_at))
-            console.log(
-              "24 hours ago:",
-              new Date(Date.now() - 24 * 60 * 60 * 1000)
-            )
             const isExpired =
               new Date(deed.created_at) <
               new Date(Date.now() - 24 * 60 * 60 * 1000)
