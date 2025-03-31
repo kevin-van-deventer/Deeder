@@ -14,7 +14,8 @@ module ApplicationCable
 
       if token.present?
         begin
-          decoded_token = JWT.decode(token, Rails.application.credentials.secret_key_base, true, { algorithm: 'HS256' })[0]
+          # decoded_token = JWT.decode(token, Rails.application.credentials.secret_key_base, true, { algorithm: 'HS256' })[0]
+          decoded_token = JWT.decode(token, Rails.application.secret_key_base, true, { algorithm: 'HS256' })[0]
           user = User.find_by(id: decoded_token["user_id"]) || reject_unauthorized_connection
 
           return user if user.present?
