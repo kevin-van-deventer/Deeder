@@ -322,6 +322,12 @@ p {
   border-color: rgba(255, 255, 255, 0.6);
 }
 
+.deed-input.auto-expand {
+  min-height: 50px;
+  overflow: hidden;
+  resize: none; /* prevents manual resizing */
+}
+
 /* Submit Button (Disable State) */
 .deed-button:disabled {
   background: rgba(50, 205, 213, 0.4);

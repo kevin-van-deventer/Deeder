@@ -31,6 +31,12 @@ const Dashboard = () => {
     longitude: "",
   })
 
+  // Text-area auto-resize function
+  const handleAutoResize = (e) => {
+    e.target.style.height = "auto" // Reset height to allow shrinking
+    e.target.style.height = e.target.scrollHeight + "px" // Adjust height to fit content
+  }
+
   const token = localStorage.getItem("token")
 
   useEffect(() => {
@@ -665,13 +671,15 @@ const Dashboard = () => {
                 onClick={(e) => e.stopPropagation()}
               >
                 <h3>Request a Deed</h3>
-                <input
-                  type="text"
+
+                <textarea
+                  // type="text"
                   name="description"
                   placeholder="Description"
                   value={deedData.description}
                   onChange={handleDeedChange}
-                  className="deed-input"
+                  onInput={handleAutoResize}
+                  className="deed-input auto-expand"
                 />
                 <select
                   name="deed_type"
