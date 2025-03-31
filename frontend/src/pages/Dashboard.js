@@ -573,6 +573,11 @@ const Dashboard = () => {
             Deeds
           </h2>
           {deeds.map((deed) => {
+            console.log("Deed created at:", new Date(deed.created_at))
+            console.log(
+              "24 hours ago:",
+              new Date(Date.now() - 24 * 60 * 60 * 1000)
+            )
             const isExpired =
               new Date(deed.created_at) <
               new Date(Date.now() - 24 * 60 * 60 * 1000)
