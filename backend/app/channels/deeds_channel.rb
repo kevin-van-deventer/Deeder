@@ -4,6 +4,6 @@ class DeedsChannel < ApplicationCable::Channel
   end
 
   def unsubscribed
-    Rails.logger.info "Unsubscribed from deeds_channel"
+    # Rails.logger.info "Unsubscribed from deeds_channel"
   end
 end

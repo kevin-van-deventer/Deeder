@@ -44,8 +44,8 @@ const Dashboard = () => {
     const cable = createConsumer(
       `${process.env.REACT_APP_WS_BASE_URL}?token=${token}`
     )
-    console.log("Created Action Cable consumer")
-    console.log(cable)
+    // console.log("Created Action Cable consumer")
+    // console.log(cable)
 
     const deedsChannel = cable.subscriptions.create(
       { channel: "DeedsChannel" },
@@ -542,9 +542,10 @@ const Dashboard = () => {
                 {deed.status === "unfulfilled" && (
                   <button
                     className="complete-button"
-                    onClick={() => handleConfirmCompletion(deed.id)}
+                    // onClick={() => handleConfirmCompletion(deed.id)}
                   >
-                    Mark as Completed
+                    {deed.completion_status}
+                    {/* Mark as Completed */}
                   </button>
                 )}
 
