@@ -605,18 +605,21 @@ const Dashboard = () => {
                   <p>No volunteers yet.</p>
                 )}
                 {/* Show Repost Button Only for Expired Deeds */}
-                {isExpired && deed.status === "unfulfilled" ? (
-                  <button
-                    className="repost-button"
-                    onClick={() => handleRepostDeed(deed.id)}
-                  >
-                    Repost
-                  </button>
-                ) : (
-                  <p>
-                    <strong>Expired</strong>
-                  </p>
-                )}
+                {isExpired ? (
+                  <>
+                    <p>
+                      <strong>Expired</strong>
+                    </p>
+                    {deed.status === "unfulfilled" && (
+                      <button
+                        className="repost-button"
+                        onClick={() => handleRepostDeed(deed.id)}
+                      >
+                        Repost
+                      </button>
+                    )}
+                  </>
+                ) : null}
 
                 {/* Mark as Completed Button */}
                 {/* {deed.status === "unfulfilled" && ( */}
