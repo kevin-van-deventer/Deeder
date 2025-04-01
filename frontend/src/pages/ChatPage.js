@@ -146,15 +146,16 @@ const ChatPage = () => {
               {/* List of Volunteers */}
               {deed.volunteers.length > 0 ? (
                 <div className="volunteer-list">
+                  {/* TODO Only one chat button*/}
                   {deed.volunteers.map((volunteer, index) => (
                     <div key={volunteer.id} className="volunteer-item">
                       {/* <p>{volunteer.first_name} {volunteer.last_name}</p> */}
-                      <button
+                      <p
                         className="chat-button"
-                        onClick={() => handleStartChat(deed, volunteer)}
+                        // onClick={() => handleStartChat(deed, volunteer)}
                       >
-                        Vol {index + 1}
-                      </button>
+                        {volunteer.first_name}
+                      </p>
                     </div>
                   ))}
                 </div>
