@@ -125,7 +125,7 @@ const ChatPage = () => {
     try {
       await axios.post(
         `${process.env.REACT_APP_API_BASE_URL}/chat_rooms/${chatRoom.id}/messages`,
-        { content: contentToSend },
+        { content: contentToSend, sender_id: user.id },
         { headers: { Authorization: `Bearer ${token}` } }
       )
     } catch (error) {
