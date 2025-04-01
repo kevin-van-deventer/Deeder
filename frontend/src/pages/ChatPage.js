@@ -170,6 +170,12 @@ const ChatPage = () => {
                       <span>
                         {volunteer.first_name} {volunteer.last_name}
                       </span>
+                      <button
+                        className="chat-button"
+                        onClick={() => handleStartChat(deed, volunteer)}
+                      >
+                        Chat
+                      </button>
                     </div>
                   ))}
                 </div>
@@ -178,7 +184,7 @@ const ChatPage = () => {
               )}
               <button
                 className="chat-button"
-                onClick={() => handleStartChat(deed)}
+                onClick={() => handleStartChat(deed, deed.volunteers[0])}
               >
                 Chat
               </button>
