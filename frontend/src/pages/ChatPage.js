@@ -108,6 +108,24 @@ const ChatPage = () => {
     }
   }
 
+  // Determine a color for a each user ID
+  const getColorForUser = (userId) => {
+    // List of colors
+    const colors = ["#FF5733", "#33FF57", "#3357FF", "#FF33A6", "#33FFF3"]
+
+    // Convert non-numeric IDs to a numeric
+    const numericId =
+      typeof userId === "number"
+        ? userId
+        : Array.from(String(userId)).reduce(
+            (acc, char) => acc + char.charCodeAt(0),
+            0
+          )
+
+    // Use modulus to cycle through colors
+    return colors[numericId % colors.length]
+  }
+
   // Send a message
   const handleSendMessage = async () => {
     if (!messageContent.trim() || !chatRoom) return
@@ -149,19 +167,21 @@ const ChatPage = () => {
                   {/* TODO Only one chat button*/}
                   {deed.volunteers.map((volunteer, index) => (
                     <div key={volunteer.id} className="volunteer-item">
-                      {/* <p>{volunteer.first_name} {volunteer.last_name}</p> */}
-                      <p
-                        className="chat-button"
-                        // onClick={() => handleStartChat(deed, volunteer)}
-                      >
-                        {volunteer.first_name}
-                      </p>
+                      <span>
+                        {volunteer.first_name} {volunteer.last_name}
+                      </span>
                     </div>
                   ))}
                 </div>
               ) : (
                 <p>No volunteers yet.</p>
               )}
+              <button
+                className="chat-button"
+                onClick={() => handleStartChat(deed)}
+              >
+                Chat
+              </button>
             </div>
           ))
         ) : (
@@ -210,6 +230,7 @@ const ChatPage = () => {
                     className={
                       msg.sender_id === user.id ? "outgoing" : "incoming"
                     }
+                    style={{ color: getColorForUser(msg.sender_id) }}
                   >
                     {msg.content}
                   </p>
