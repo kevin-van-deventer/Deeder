@@ -1,6 +1,6 @@
 class CreateDeeds < ActiveRecord::Migration[7.0]
   def change
-    drop_table :deeds, if_exists: true # Ensures the table is removed before recreating
+    drop_table :deeds, if_exists: true, cascade: true # Ensures the table is removed before recreating
 
     create_table :deeds do |t|
       t.string :description

@@ -1,15 +1,19 @@
-# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+# test/fixtures/deeds.yml
 
 one:
-  description: MyString
-  deed_type: MyString
-  status: MyString
-  requester_id: 1
-  completed_by_id: 1
+  description: "Help build a house"
+  deed_type: "one-time"
+  status: "unfulfilled"
+  latitude: 40.7128
+  longitude: -74.0060
+  address: "123 Main St"
+  requester: one
 
 two:
-  description: MyString
-  deed_type: MyString
-  status: MyString
-  requester_id: 1
-  completed_by_id: 1
+  description: "Donate clothes"
+  deed_type: "material"
+  status: "unfulfilled"
+  latitude: 40.7306
+  longitude: -73.9352
+  address: "456 Another St"
+  requester: two

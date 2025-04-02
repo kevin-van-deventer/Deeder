@@ -22,7 +22,7 @@ class Deed < ApplicationRecord
     before_validation :set_default_status, on: :create
 
     def set_default_status
-    self.status ||= "unfulfilled"
+      self.status ||= "unfulfilled"
     end
 
     belongs_to :requester, class_name: 'User'
