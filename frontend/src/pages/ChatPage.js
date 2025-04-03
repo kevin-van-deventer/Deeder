@@ -148,11 +148,12 @@ const ChatPage = () => {
                 <div className="volunteer-list">
                   {/* TODO Only one chat button*/}
                   <div className="volunteer-item">
-                    {deed.volunteers.map((volunteer, index) => (
+                    Volunteers: {deed.volunteers.length}
+                    {/* {deed.volunteers.map((volunteer, index) => (
                       <span>
                         {volunteer.first_name} {volunteer.last_name}
                       </span>
-                    ))}
+                    ))} */}
                   </div>
                 </div>
               ) : (
