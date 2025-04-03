@@ -213,7 +213,7 @@ const ChatPage = () => {
                       msg.sender_id === user.id ? "outgoing" : "incoming"
                     }
                   >
-                    {user.id}:{msg.content}
+                    {msg.content}
                   </p>
                 ))}
             </div>

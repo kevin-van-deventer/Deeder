@@ -1,10 +1,21 @@
-import React from "react"
+import React, { useState } from "react"
 
 // import styles
 import "./AuthForm.css"
 
 const AuthForm = ({ formData, handleChange, handleSubmit, type }) => {
   const isSignup = type === "signup"
+  const [emailError, setEmailError] = useState("")
+
+  const validateEmail = (email) => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+    return emailRegex.test(email)
+  }
+
+  const handleEmailChange = (e) => {
+    handleChange(e)
+    setEmailError(validateEmail(e.target.value) ? "" : "Invalid email address")
+  }
 
   return (
     <form className="container" onSubmit={handleSubmit}>
@@ -43,7 +54,7 @@ const AuthForm = ({ formData, handleChange, handleSubmit, type }) => {
           type="email"
           name="email"
           placeholder="Email"
-          onChange={handleChange}
+          onChange={handleEmailChange}
           value={formData.email}
           required
         />

@@ -564,7 +564,7 @@ const Dashboard = () => {
 
           {/* <div className="deeds-section"> */}
           <button
-            className="logout-button"
+            className="addDeed-button"
             onClick={() => setIsAddingDeed(!isAddingDeed)}
           >
             {isAddingDeed ? "Cancel" : "Add Deed"}
