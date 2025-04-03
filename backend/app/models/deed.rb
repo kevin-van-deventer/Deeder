@@ -52,6 +52,7 @@ class Deed < ApplicationRecord
     def fully_confirmed?
       if enough_volunteers_confirmed?
         update(status: "fulfilled")  # ✅ Auto-update status when condition is met
+        broadcast_deeds_update
         return true
       end
       false
